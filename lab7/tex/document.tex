@@ -1,0 +1,170 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T2A]{fontenc}			
+\usepackage[utf8]{inputenc}			
+\usepackage[english,russian]{babel}	
+
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\usepackage{color}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{black}}
+\DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+\usepackage{wasysym}
+
+\usepackage{graphicx}
+%\usepackage[cache=false]{minted}
+\usepackage{cmap}
+\usepackage{indentfirst}
+
+\usepackage{listings} 
+\usepackage{fancyvrb}
+
+\usepackage{geometry}
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=1cm}
+\geometry{bottom=2cm}
+
+\setlength{\parindent}{5ex}
+\setlength{\parskip}{0.5em}
+
+\usepackage{pgfplots}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\begin{document}
+	\lstset{ %
+		language=C,                 % выбор языка для подсветки (здесь это С)
+		basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+		numbers=left,               % где поставить нумерацию строк (слева\справа)
+		numberstyle=\tiny,           % размер шрифта для номеров строк
+		stepnumber=1,                   % размер шага между двумя номерами строк
+		numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+		backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+		showspaces=false,            % показывать или нет пробелы специальными отступами
+		showstringspaces=false,      % показывать или нет пробелы в строках
+		showtabs=false,             % показывать или нет табуляцию в строках
+		frame=single,              % рисовать рамку вокруг кода
+		tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+		captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+		breaklines=true,           % автоматически переносить строки (да\нет)
+		breakatwhitespace=false, % переносить строки только если есть пробел
+		escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+	}
+	
+	% Титульный лист
+	\begin{figure}[h!]
+		\begin{center}
+			{\includegraphics[scale = 0.4]{titul.jpg}}
+			\label{titul}
+		\end{center}
+	\end{figure}
+	
+	\vspace*{15mm} 
+	
+	\huge
+	\begin{center}
+		Дисциплина: <<Функциональное и логическое программирование>>
+	\end{center}
+	\vspace*{15mm} 	
+	
+	\begin{center}
+		Лабораторная работа №7
+	\end{center}
+	
+	\vspace*{15mm} 	
+	
+	\large
+	\begin{flushright}
+		Студент: Левушкин И. К. \\
+		Группа: ИУ7-62Б \\
+		Преподаватели: Толпинская Н. Б., \\ Строганов Ю. В. \\
+	\end{flushright}
+	
+	\vspace*{30mm}
+	\begin{center}
+		Москва, 2020 г.  
+	\end{center}
+	\thispagestyle{empty}
+	
+	
+	\newpage
+	
+	\section{Чем принципиально отличаются функции cons, list, append?}
+	
+	\begin{itemize}
+		\item cons - создает списковую ячейку
+		\item list - создает список из своих аргументов
+		\item append - создает список добавлением к 1ому аргументу-списку всех последующих
+	\end{itemize}
+
+	\subsection{Каковы результаты вычисления следующих выражений?}
+	
+	Пусть \textit{(setq lst1 '( a b)) (setq lst2 '( c d))}
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|l|l|}
+				\hline
+				{\bf  Выражение} &    {\bf Результат} \\
+				\hline
+				{(cons Ist1 Ist2)} & ((A B) C D)\\
+				\hline
+				{(list lst1 Ist2)} & ((A B) (C D))\\
+				\hline
+				{(append Ist1 Ist2)} & (A B C D)\\
+				\hline
+			\end{tabular}  
+			\label{m1}
+		\end{center}
+	\end{table}
+	
+	\section{Каковы результаты вычисления следующих выражений?}
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|l|l|}
+				\hline
+				{\bf  Выражение} &    {\bf Результат} \\
+				\hline
+				{(reverse Q)} & error:variable Q has no value\\
+				\hline
+				{(last ())} & NIL\\
+				\hline
+				{(reverse '(a))} & (A)\\
+				\hline
+				{(last '(a))} & (A)\\
+				\hline
+				{(reverse '((a b c)))} & ((A B C))\\
+				\hline
+				{(last '((a b c)))} & ((A B C))\\
+				\hline
+			\end{tabular}  
+			\label{m2}
+		\end{center}
+	\end{table}
+	
+	\section{Написать, по крайней мере, два варианта функции, которая возвращает последний элемент своего списка-аргумента.}
+	
+	\section{Написать, по крайней мере, два варианта функции, которая возвращает свой список-аргумент без последнего элемента.}
+	
+	\section{Написать простой вариант игры в кости, в котором бросаются две правильные кости. }
+	
+	\subsection{Условие}
+	
+	Если сумма выпавших очков равна 7 или 11 -- выигрыш, если выпало (1,1) или (6,6) --- игрок право снова бросить кости, во всех остальных случаях ход переходит ко второму игроку, но запоминается сумма выпавших очков. Если второй игрок не выигрывает абсолютно, то выигрывает тот игрок, у которого больше очков. Результат игры и значения выпавших костей выводить на экран с помощью функции print.
+	
+	\subsection{Решение}
+	
+	
+	
+
+\end{document}

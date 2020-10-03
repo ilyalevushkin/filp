@@ -1,0 +1,227 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T2A]{fontenc}			
+\usepackage[utf8]{inputenc}			
+\usepackage[english,russian]{babel}	
+
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\usepackage{color}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{black}}
+\DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+\usepackage{wasysym}
+
+\usepackage{graphicx}
+%\usepackage[cache=false]{minted}
+\usepackage{cmap}
+\usepackage{indentfirst}
+
+\usepackage{listings} 
+\usepackage{fancyvrb}
+
+\usepackage{geometry}
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=1cm}
+\geometry{bottom=2cm}
+
+\setlength{\parindent}{5ex}
+\setlength{\parskip}{0.5em}
+
+\usepackage{pgfplots}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\begin{document}
+	\lstset{ %
+		language=C,                 % выбор языка для подсветки (здесь это С)
+		basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+		numbers=left,               % где поставить нумерацию строк (слева\справа)
+		numberstyle=\tiny,           % размер шрифта для номеров строк
+		stepnumber=1,                   % размер шага между двумя номерами строк
+		numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+		backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+		showspaces=false,            % показывать или нет пробелы специальными отступами
+		showstringspaces=false,      % показывать или нет пробелы в строках
+		showtabs=false,             % показывать или нет табуляцию в строках
+		frame=single,              % рисовать рамку вокруг кода
+		tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+		captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+		breaklines=true,           % автоматически переносить строки (да\нет)
+		breakatwhitespace=false, % переносить строки только если есть пробел
+		escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+	}
+	
+	% Титульный лист
+	\begin{figure}[h!]
+		\begin{center}
+			{\includegraphics[scale = 0.4]{titul.jpg}}
+			\label{titul}
+		\end{center}
+	\end{figure}
+	
+	\vspace*{15mm} 
+	
+	\huge
+	\begin{center}
+		Дисциплина: <<Функциональное и логическое программирование>>
+	\end{center}
+	\vspace*{15mm} 	
+	
+	\begin{center}
+		Лабораторная работа №3
+	\end{center}
+	
+	\vspace*{15mm} 	
+	
+	\large
+	\begin{flushright}
+		Студент: Левушкин И. К. \\
+		Группа: ИУ7-62Б \\
+		Преподаватели: Толпинская Н. Б., \\ Строганов Ю. В. \\
+	\end{flushright}
+	
+	\vspace*{30mm}
+	\begin{center}
+		Москва, 2020 г.  
+	\end{center}
+	\thispagestyle{empty}
+	
+	
+	\newpage
+	
+	\section{Составить диаграмму вычисления следующих выражений:}
+	\textit{(equal 3 (abs - 3))}
+	\vspace*{60mm} 
+	
+	\textit{(equal (+ 1 2) 3)}
+	\vspace*{60mm} 
+	
+	\textit{(equal (* 4 7) 21)}
+	\vspace*{60mm} 
+	
+	\textit{(equal (* 2 3) (+ 7 2))}
+	\vspace*{60mm} 
+	
+	\textit{(equal (- 7 3) (* 3 2))}
+	\vspace*{60mm} 
+	
+	\textit{(equal (abs (- 2 4)) 3)}
+	\vspace*{60mm} 
+	
+	\newpage
+	
+	\section{Написать функцию, вычисляющую гипотенузу прямоугольноготреугольника по заданным катетам и составить диаграмму её вычисления.
+	}
+	\textit{(defun f1 (a b) (sqrt (+ (* a a) (* b b) ) ) )}
+	\newpage
+
+	\section{Написать функцию, вычисляющую объем параллелепипеда по 3-м его сторонам, и составить диаграмму ее вычисления.}
+	\textit{(defun v (x y z) (* x y z))}
+	\newpage
+	
+	\section{Каковы результаты вычисления следующих выражений?}
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|l|l|}
+				\hline
+				{\bf  Выражение} &    {\bf Результат} \\
+				\hline
+				{(list 'a c)} & error: variable C has no value\\
+				\hline
+				{(cons 'a (b c))} & error: undefined function B\\
+				\hline
+				{(cons 'a '(b c))} & (A B C)\\
+				\hline
+				{(caddr (1 2 3 4 5))} & error: 1 is not a function name\\
+				\hline
+				{(cons'a'b'c)} & error: too many arguments given to CONS\\
+				\hline
+				{(list 'a (b c))} & error: undefined function B \\
+				\hline
+				{(list a '(b c))} & error: variable A has no value\\
+				\hline
+				{(list (+ 1 '(length '(1 2 3))))} & error: +: (LENGTH '(1 2 3)) is not a number \\
+				\hline
+			\end{tabular}
+			\label{m1}
+		\end{center}
+	\end{table}
+	
+	\section{Написать функцию longer\_then от двух списков-аргументов, которая возвращает Т, если первый аргумент имеет большую длину.}
+	\textit{(defun longer\_than (a b) (cond ((> (length a) (length b)) T)))}
+	
+	Пример:
+	\begin{itemize}
+		\item (longer\_than '(a b c d) '(a b c)) = T
+		\item (longer\_than '(f ss) '(r w q)) = Nil
+		\item (longer\_than '(1 (2 (3 (4)))) '(1 (2 (3)))) = Nil
+	\end{itemize}
+	
+	\section{Каковы результаты вычисления следующих выражений?}
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|l|l|}
+				\hline
+				{\bf  Выражение} &    {\bf Результат} \\
+				\hline
+				{(cons 3 (list 5 6))} & (3 5 6)\\
+				\hline
+				{(list 3 'from 9 'lives (- 9 3))} & (3 FROM 9 LIVES 6)\\
+				\hline
+				{((+ (length for 2 too)) (car '(21 22 23)))} &error: (+ (LENGTH FOR 2 TOO)) is not a function name\\
+				\hline
+				{(cdr ' (cons is short for ans))} & (IS SHORT FOR ANS)\\
+				\hline
+				{(car (list one two))} & error: variable ONE has no value\\
+				\hline
+				{(cons 3 '(list 5 6))} & (3 LIST 5 6)\\
+				\hline
+				{(car (list 'one 'two))} & ONE\\
+				\hline
+			\end{tabular}  
+			\label{m2}
+		\end{center}
+	\end{table}
+	
+	
+	\section*{Ответы на вопросы}
+	
+	\begin{enumerate}
+		\item Базис - это минимально необходимый набор конструкций, с помощью которого можно реализовать задачу.
+		\item Варианты классификаций функции LISP
+		\begin{itemize}
+			\item чистые(математические): принимают строго определенное число аргументов и возвращают одно значение
+			\item формы: могут принимать разное число аргументов, в зависимости от чего по-разному себя ведет
+			\item функционалы: принимают функциональные описания.
+		\end{itemize}
+		\item Классификация базовых функций Lisp
+		\begin{itemize}
+			\item функции-селекторы (функции доступа к данным): car, cdr
+			\item функции-конструкторы: cons, list
+			\item функции-предикаты: atom, Null, lisp и тю дю
+			\item функции-сравнения: eq, eql, -, equl, equalp
+		\end{itemize}
+		\item Как работают car, cdr
+		Функции car и cdr являются базисными функциями-селекторами.
+		car принимает в качестве аргумента точечную пару или список. Функция возвращает голову списка. В случае точечной пары или непустого списка функция вернет первый элемент, в случае пустого списка - Nil. cdr также принимает в качестве аргумента точечную пару или список. Функция возвращает хвост списка, т. е. список, состоящий из всех элементов кроме первого. Если в списке меньше двух элементов, то функция возвращает Nil.
+		\item Отличия list и cons
+		Cons - базис языка, на вход принимает ровно два аргумента и создает одну списковую ячейку (расставляет указатели).
+		List - написана на базе cons, принимает любое количество аргументов и создает список.
+		Пример:
+		(cons 'a (cons 'b (cons 'c Nil))) = (a b c)
+		(list 'a 'b 'c) = (a b c)
+	\end{enumerate}
+
+	
+\end{document}

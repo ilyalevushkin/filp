@@ -1,0 +1,843 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T2A]{fontenc}			
+\usepackage[utf8]{inputenc}			
+\usepackage[english,russian]{babel}	
+
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\usepackage{color}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{black}}
+\DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+\usepackage{wasysym}
+
+\usepackage[cache=false]{minted}
+
+\usepackage{graphicx}
+\usepackage{cmap}
+\usepackage{indentfirst}
+
+\usepackage{listings} 
+\usepackage{fancyvrb}
+
+\usepackage{geometry}
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=1cm}
+\geometry{bottom=2cm}
+
+\usepackage{longtable}
+
+\setlength{\parindent}{5ex}
+\setlength{\parskip}{0.5em}
+
+\usepackage{pgfplots}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\begin{document}
+	\lstset{ %
+		language=C,                 % выбор языка для подсветки (здесь это С)
+		basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+		numbers=left,               % где поставить нумерацию строк (слева\справа)
+		numberstyle=\tiny,           % размер шрифта для номеров строк
+		stepnumber=1,                   % размер шага между двумя номерами строк
+		numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+		backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+		showspaces=false,            % показывать или нет пробелы специальными отступами
+		showstringspaces=false,      % показывать или нет пробелы в строках
+		showtabs=false,             % показывать или нет табуляцию в строках
+		frame=single,              % рисовать рамку вокруг кода
+		tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+		captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+		breaklines=true,           % автоматически переносить строки (да\нет)
+		breakatwhitespace=false, % переносить строки только если есть пробел
+		escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+	}
+	
+	% Титульный лист
+	\begin{figure}[h!]
+		\begin{center}
+			{\includegraphics[scale = 0.4]{titul.jpg}}
+			\label{titul}
+		\end{center}
+	\end{figure}
+	
+	\vspace*{15mm} 
+	
+	\huge
+	\begin{center}
+		Дисциплина: <<Функциональное и логическое программирование>>
+	\end{center}
+	\vspace*{15mm} 	
+	
+	\begin{center}
+		Лабораторная работа №15
+	\end{center}
+	
+	\vspace*{15mm} 	
+	
+	\large
+	\begin{flushright}
+		Студент: Левушкин И. К. \\
+		Группа: ИУ7-62Б \\
+		Преподаватели: Толпинская Н. Б., \\ Строганов Ю. В. \\
+	\end{flushright}
+	
+	\vspace*{30mm}
+	\begin{center}
+		Москва, 2020 г.  
+	\end{center}
+	\thispagestyle{empty}
+	
+	
+	\newpage
+	
+	\section*{Цель работы}
+	
+	Изучить структуру, особенности и принципы оформления программы, и способ выполнения программы на Prolog.
+	
+	\section*{Задачи работы}
+	
+	Приобрести навыки декларативного описания предметной области с использованием фактов, правил и некоторых специальных разделов программы.
+	Изучить порядок использования фактов и правил в программе на Prolog, принципы  и особенности сопоставления и отождествления термов, на основе механизма унификации.
+	
+	\section*{Задание}
+	
+	Создать базу знаний {\bf <<Собственники>>}, дополнив базу знаний, хранящую знания (лаб. 13):
+	\begin{itemize}
+		\item {\bf <<Телефонный справочник>>}: Фамилия, №тел, Адрес – структура (Город, Улица, №дома, №кв),
+		\item {\bf <<Автомобили>>}: Фамилия\_владельца, Марка, Цвет, {\bf Стоимость}, и др.,
+		\item {\bf <<Вкладчики банков>>}: Фамилия, Банк, счет, сумма, др.,
+	\end{itemize}
+	знаниями о дополнительной {\bf собственности} владельца. {\bf Преобразовать} знания об \underline{автомобиле} к форме знаний о собственности.
+	Вид собственности (кроме автомобиля):
+	\begin{itemize}
+		\item {\bf Строение, стоимость} и другие его характеристики;
+		\item {\bf Участок, стоимость} и другие его характеристики;
+		\item {\bf Водный транспорт, стоимость} и другие его характеристики.
+	\end{itemize}
+	
+	Описать и использовать вариантный домен: {\bf Собственность}. Владелец может иметь, но {\bf только один} объект {\bf каждого вида собственности (}это касается и {bf автомобиля)}, или не иметь некоторых видов собственности. 
+	
+	Используя {\bf конъюнктивное правило и 
+	разные формы} задания {\bf одного вопроса (пояснять} для какого №задания – какой вопрос), 
+	обеспечить возможность поиска:
+	
+	\begin{enumerate}
+		\item Названий всех объектов собственности заданного субъекта,
+		\item Названий и стоимости всех объектов собственности заданного субъекта,
+		\item Разработать правило, позволяющее найти суммарную стоимость всех объектов собственности заданного субъекта.
+	\end{enumerate}
+
+	Для 2-го пункт и {\bf одной} фамилии {\bf составить таблицу}, отражающую конкретный порядок работы системы, с объяснениями порядка работы и особенностей использования доменов (указать конкретные Т1 и Т2 и полную подстановку на каждом шаге)
+	
+	\begin{center}
+		\begin{longtable}[h!]{|p{0.05\linewidth}|p{0.5\linewidth}|p{ 0.4\linewidth}|}
+			\hline
+			{№ шага} & {Сравниваемые термы; результат; 
+				
+				подстановка, если есть} & {Дальнейшие действия: прямой ход 
+				
+				или откат (к чему приводит?)}\\
+			\hline
+			{1...} & {-попытка унификации: Т1=Т2 …
+				
+				-результат: Успех и подстановка,
+				
+				или Нет
+			} & {Комментарий, вывод...}\\
+			\hline
+			{2} & {...} & {...}\\
+			\hline
+			\label{m1}
+		\end{longtable}
+	\end{center}
+	
+	При желании, можно усложнить свою базу знаний, введя варианты: {\bf строение: (Дом, офис, торговый центр), участок: (садовый, территория под застройку, территория под агро-работы), Водный транспорт: варианты названий.}
+	
+	\newpage
+	
+	\section*{Реализация программы}
+	
+	\begin{minted}{prolog}
+domains
+
+town, street, sername, model, 
+watercraft, color, bank, area, building, own = symbol
+phone = string
+house, case, cost, probeg, account, money = integer
+address = adr(town, street, house, case)
+ownership = building_owner(building, cost) ;area_owner(area, cost)
+;watercraft_owner(watercraft, cost)
+;car_owner(model, color, cost, probeg)
+predicates
+
+phone_list(sername, phone, address).
+auto(sername, model, color, cost, probeg).
+bank_list(sername, bank, account, money).
+
+owner(sername, ownership).
+
+get_own_cost(sername, own, cost).
+
+
+get_sum_cost_owner(sername, cost).
+clauses
+
+get_own_cost(Sername, building, Cost) :-
+owner(Sername, building_owner(_, Cost)),
+!.
+
+get_own_cost(Sername, area, Cost) :-
+owner(Sername, area_owner(_, Cost)),
+!.
+
+get_own_cost(Sername, watercraft, Cost) :-
+owner(Sername, watercraft_owner(_, Cost)),
+!.
+
+get_own_cost(Sername, car, Cost) :-
+owner(Sername, car_owner(_, _, Cost, _)),
+!.
+
+get_own_cost(_, _, Cost):-
+Cost = 0.
+
+get_sum_cost_owner(Sername, Cost) :-
+get_own_cost(Sername, building, Building_Cost),
+get_own_cost(Sername, area, Area_Cost),
+get_own_cost(Sername, watercraft, Watercraft_Cost),
+get_own_cost(Sername, car, Car_Cost),
+Cost = Building_Cost + Area_Cost + Watercraft_Cost + Car_Cost.
+
+owner(Sername, car_owner(Model, Color, Cost, Probeg)) :-
+auto(Sername, Model, Color, Cost, Probeg).
+
+
+owner(levushkin, building_owner(dacha, 90000)).
+owner(levushkin, area_owner(dacha_area, 9000)).
+owner(levushkin, watercraft_owner(boat, 90)).
+
+owner(samkov, building_owner(fitness_club, 888888)).
+owner(samkov, area_owner(park, 89898989)).
+
+owner(ryazanova, building_owner(moscow_city, 987654321)).
+
+
+phone_list(levushkin, "89859771492", adr(moscow, kantemirovskaya, 5, 1)).
+phone_list(samkov, "89899999", adr(chelyabinsk, pushkinskaya, 4, 2)).
+phone_list(ryazanova, "8911911911", adr(moscow, baumanskaya, 9, 9)).
+
+
+auto(levushkin, volvo, grey, 3000000, 1000).
+auto(samkov, volkswagen, pink, 1000000, 99999).
+auto(ryazanova, bugatti, gold, 999999999, 1).
+
+
+bank_list(levushkin, sberbank, 1111, 900000).
+bank_list(samkov, sberbank, 2222, 100).
+bank_list(ryazanova, tinkoff, 3333, 99999999).
+bank_list(ryazanova, raiffeisen, 4444, 888888888).
+	\end{minted}
+	
+	\newpage
+	
+	\section*{Используя конъюнктивное правило и разные формы задания одного вопроса, обеспечить возможность поиска}
+	
+	\subsection*{1. Названия всех объектов собственности по заданному субъекту.}
+	
+	\textit{Пример 1:}
+	
+	\begin{minted}{prolog}
+goal
+	owner(levushkin, area_owner(Area, _));
+	owner(levushkin, building_owner(Building, _));
+	owner(levushkin, watercraft_owner(Watercraft, _));
+	owner(levushkin, car_owner(Car, _, _, _)).
+%Вывод:
+	Area=dacha_area
+	Building=dacha
+	Watercraft=boat
+	Car=volvo
+	4 Solutions
+	\end{minted}
+	
+	\textit{Пример 2:}
+	
+	\begin{minted}{prolog}
+	goal
+	owner(samkov, area_owner(Area, _));
+	owner(samkov, building_owner(Building, _));
+	owner(samkov, watercraft_owner(Watercraft, _));
+	owner(samkov, car_owner(Car, _, _, _)).
+	%Вывод:
+	Area=park
+	Building=fitness_club
+	Car=volkswagen
+	3 Solutions
+	\end{minted}
+	
+	\textit{Пример 3:}
+	
+	\begin{minted}{prolog}
+	goal
+	owner(ryazanova, area_owner(Area, _));
+	owner(ryazanova, building_owner(Building, _));
+	owner(ryazanova, watercraft_owner(Watercraft, _));
+	owner(ryazanova, car_owner(Car, _, _, _)).
+	%Вывод:
+	Building=moscow_city
+	Car=bugatti
+	2 Solutions
+	\end{minted}
+	
+	\subsection*{2. Названия и стоимости всех объектов собственности по заданному субъекту.}
+	
+	\textit{Пример 1:}
+	
+	\begin{minted}{prolog}
+	goal
+	owner(levushkin, area_owner(Area, Area_Cost));
+	owner(levushkin, building_owner(Building, Building_Cost));
+	owner(levushkin, watercraft_owner(Watercraft, Watercraft_Cost));
+	owner(levushkin, car_owner(Car, _, Car_Cost, _)).
+	%Вывод:
+	Area=dacha_area, Area_Cost=9000
+	Building=dacha, Building_Cost=90000
+	Watercraft=boat, Watercraft_Cost=90
+	Car=volvo, Car_Cost=3000000
+	4 Solutions
+	\end{minted}
+	
+	\textit{Пример 2:}
+	
+	\begin{minted}{prolog}
+	goal
+	owner(samkov, area_owner(Area, Area_Cost));
+	owner(samkov, building_owner(Building, Building_Cost));
+	owner(samkov, watercraft_owner(Watercraft, Watercraft_Cost));
+	owner(samkov, car_owner(Car, _, Car_Cost, _)).
+	%Вывод:
+	Area=park, Area_Cost=89898989
+	Building=fitness_club, Building_Cost=888888
+	Car=volkswagen, Car_Cost=1000000
+	3 Solutions
+	\end{minted}
+	
+	\textit{Пример 3:}
+	
+	\begin{minted}{prolog}
+	goal
+	owner(ryazanova, area_owner(Area, Area_Cost));
+	owner(ryazanova, building_owner(Building, Building_Cost));
+	owner(ryazanova, watercraft_owner(Watercraft, Watercraft_Cost));
+	owner(ryazanova, car_owner(Car, _, Car_Cost, _)).
+	%Вывод:
+	Building=moscow_city, Building_Cost=987654321
+	Car=bugatti, Car_Cost=999999999
+	2 Solutions
+	\end{minted}
+	
+	\textit{Порядок работы системы на 3 примере:}
+	
+	\begin{center}
+		\begin{longtable}[h!]{|p{0.05\linewidth}|p{0.5\linewidth}|p{ 0.4\linewidth}|}
+			\hline
+			{\bf  № шага} & {\bf Сравниваемые термы; результат; 
+				
+				подстановка, если есть} & {\bf Дальнейшие действия: прямой ход 
+				
+				или откат (к чему приводит?)} \\
+			\hline
+			{1} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+			
+		T2 = get\_own\_cost(Sername, building, Cost).
+	
+Неудача (функторы owner и get\_own\_cost не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 5 предложениях. Прямой ход к следующему предложению}\\
+			\hline
+			{7} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+			
+		T2 = owner(Sername, car\_owner(Model, Color, Cost, Probeg)).
+	
+Неудача (функторы area\_owner и car\_owner не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{8} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+			
+		T2 = owner(levushkin, building\_owner(dacha, 90000)).
+	
+Неудача (ryazanova != levushkin).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{9} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+			
+		 T2 =  owner(levushkin, area\_owner(dacha\_area, 9000).
+	 
+ Неудача (ryazanova != levushkin)} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{10} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+				
+				T2 =  owner(levushkin, warercraft\_owner(boat, 90)).
+			
+		Неудача (ryazanova != levushkin)} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{11} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+				
+				T2 =  owner(samkov, building\_owner(fitness\_club, 888888)).
+			
+		Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{12} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+				
+				T2 =  owner(samkov, area\_owner(park, 89898989)).
+			
+		Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{13} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+				
+				T2 =  owner(ryazanova, building\_owner(moscow\_city, 987654321)).
+			
+		Неудача (функторы area\_owner и building\_owner не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{14} & {T1 = owner(ryazanova, area\_owner(Area, Area\_Cost));
+				
+				T2 =  phone\_list(levushkin, <<89859771492>>, adr(moscow, kantemirovskaya, 5, 1)).
+			
+		Неудача (функторы owner и phone\_list не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 9 предложениях (phone\_list, auto, bank\_list). Откат, переход к предыдущему состоянию резольвенты. Поиск с начала предложений.}\\
+			\hline
+			{24} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 = get\_own\_cost(Sername, building, Cost).
+				
+				Неудача (функторы owner и get\_own\_cost не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 5 предложениях. Прямой ход к следующему предложению}\\
+			\hline
+			{30} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 = owner(Sername, car\_owner(Model, Color, Cost, Probeg)).
+				
+				Неудача (функторы building\_owner и car\_owner не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{31} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 = owner(levushkin, building\_owner(dacha, 90000)).
+				
+				Неудача (ryazanova != levushkin).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{32} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 =  owner(levushkin, area\_owner(dacha\_area, 9000).
+				
+				Неудача (ryazanova != levushkin)} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{33} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 =  owner(levushkin, warercraft\_owner(boat, 90)).
+				
+				Неудача (ryazanova != levushkin)} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{34} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 =  owner(samkov, building\_owner(fitness\_club, 888888)).
+				
+				Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{35} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 =  owner(samkov, area\_owner(park, 89898989)).
+				
+				Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{36} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 =  owner(ryazanova, building\_owner(moscow\_city, 987654321)).
+				
+				Успех. Подсановка Building = moscow\_city, Building\_Cost = 987654321.} & {Вывод:
+				
+				Building = moscow\_city,
+				
+				Building\_Cost = 987654321,
+				
+				Прямой ход к следующему предложению. Реконкретизация Building, Building\_Cost.}\\
+			\hline
+			{37} & {T1 = owner(ryazanova, building\_owner(Building, Building\_Cost));
+				
+				T2 =  phone\_list(levushkin, <<89859771492>>, adr(moscow, kantemirovskaya, 5, 1)).
+				
+				Неудача (функторы owner и phone\_list не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 9 предложениях (phone\_list, auto, bank\_list). Откат, переход к предыдущему состоянию резольвенты. Поиск с начала предложений.}\\
+			\hline
+			{47} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+			
+		T2 = get\_own\_cost(Sername, building, Cost).
+	
+Неудача (функторы owner и get\_own\_cost не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 5 предложениях. Прямой ход к следующему предложению}\\
+						\hline
+			{53} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 = owner(Sername, car\_owner(Model, Color, Cost, Probeg)).
+				
+				Неудача (функторы watercraft\_owner и car\_owner не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{54} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 = owner(levushkin, building\_owner(dacha, 90000)).
+				
+				Неудача (ryazanova != levushkin).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{55} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 =  owner(levushkin, area\_owner(dacha\_area, 9000).
+				
+				Неудача (ryazanova != levushkin)} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{56} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 =  owner(levushkin, warercraft\_owner(boat, 90)).
+				
+				Неудача (ryazanova != levushkin)} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{57} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 =  owner(samkov, building\_owner(fitness\_club, 888888)).
+				
+				Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{58} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 =  owner(samkov, area\_owner(park, 89898989)).
+				
+				Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{59} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 =  owner(ryazanova, building\_owner(moscow\_city, 987654321)).
+				
+				Неудача (функторы watercraft\_owner и building\_owner не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{60} & {T1 = owner(ryazanova, watercraft\_owner(Watercraft, Watercraft\_Cost));
+				
+				T2 =  phone\_list(levushkin, <<89859771492>>, adr(moscow, kantemirovskaya, 5, 1)).
+				
+				Неудача (функторы owner и phone\_list не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 9 предложениях (phone\_list, auto, bank\_list). Откат, переход к предыдущему состоянию резольвенты. Поиск с начала предложений.}\\
+			\hline
+			{70} & {T1 = owner(ryazanova, car\_owner(Car, \_, Car\_Cost, \_));
+			
+		T2 = get\_own\_cost(Sername, building, Cost).
+	
+Неудача (функторы owner и get\_own\_cost не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 5 предложениях. Прямой ход к следующему предложению}\\
+			\hline
+			{76} & {T1 = owner(ryazanova, car\_owner(Car, \_, Car\_Cost, \_));
+			
+		T2 = owner(Sername, car\_owner(Model, Color, Cost, Probeg)).
+	
+Успех. Подстановка ryazanova = Sername, Car = Model, Car\_Cost = Cost.} & {Прямой ход к auto(ryazanova, Car, \_, Car\_Cost, \_). Поиск с начала предложений.}\\
+			\hline
+			{77} & {T1 = auto(ryazanova, Car, \_, Car\_Cost, \_);
+			
+		T2 = get\_own\_cost(Sername, building, Cost).
+	
+Неудача (функторы auto и get\_own\_cost не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 15 предложениях (get\_own\_cost, get\_sum\_cost\_owner, owner, phone\_list). Прямой ход к следующему предложению}\\
+			\hline
+			{93} & {T1 = auto(ryazanova, Car, \_, Car\_Cost, \_);
+				
+				T2 = auto(levushkin, volvo, grey, 3000000, 1000).
+			
+		Неудача (ryazanova != levushkin).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{94} & {T1 = auto(ryazanova, Car, \_, Car\_Cost, \_);
+				
+				T2 = auto(samkov, volkswagen, pink, 1000000, 99999).
+			
+		Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{95} & {T1 = auto(ryazanova, Car, \_, Car\_Cost, \_);
+				
+				T2 = auto(ryazanova, bugatti, gold, 999999999, 1).
+			
+	Успех. Подстановка ryazanova = ryazanova, Car = bugatti, Car\_Cost = 999999999.} & {Вывод: Car = bugatti, Car\_Cost = 999999999. Прямой ход к следующему предложению, реконкретизация Car, Car\_Cost.}\\
+			\hline
+			{96} & {T1 = auto(ryazanova, Car, \_, Car\_Cost, \_);
+				
+				T2 = bank\_list(levushkin, sberbank, 1111, 900000).
+			
+		Неудача (функторы auto и bank\_list не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 3 предложениях. Откат, переход к предыдущему состоянию резольвенты - owner(ryazanova, car\_owner(Car, \_, Car\_Cost, \_)), реконкретизация Car, Car\_Cost.}\\
+			\hline
+			{100} & {T1 = owner(ryazanova, car\_owner(Car, \_, Car\_Cost, \_));
+			
+		T2 = owner(levushkin, building\_owner(dacha, 90000).
+		
+		Неудача (ryazanova != levushkin).)} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 2 предложениях. Прямой ход к следующему предложению.}\\
+			\hline
+			{103} & {T1 = owner(ryazanova, car\_owner(Car, \_, Car\_Cost, \_));
+				
+				T2 = owner(samkov, building\_owner(fitness\_club, 888888)).
+			
+		Неудача (ryazanova != samkov).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующем предложении. Прямой ход к следующему предложению.}\\
+			\hline
+			{105} & {T1 = owner(ryazanova, car\_owner(Car, \_, Car\_Cost, \_));
+				
+				T2 = owner(ryazanova, building\_owner(moscow\_city, 987654321)).
+			
+		Неудача (функторы car\_owner и building\_owner не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{106} & {T1 = owner(ryazanova, car\_owner(Car, \_, Car\_Cost, \_));
+				
+				T2 = phone\_list(levushkin, <<89859771492>>, adr(moscow, kantemirovskaya, 5, 1)).
+				
+				Неудача (функторы owner и phone\_list не равны).} & {Прямой ход к следующему предложению. Аналогичная ситуация в следующих 9 предложениях (phone\_list, auto, bank\_list). Откат, переход к предыдущему состоянию резольвенты. Конец clauses. Опустошение резольвенты. Завершение работы (115 шагов).}\\
+			\hline
+		\label{m2}
+		\end{longtable}
+	\end{center}
+
+	\subsection*{3. Разработать правило, позволяющее найти суммарную стоимость всех объектов собственности заданного субъекта.}
+	
+	\textit{Правило:}
+	
+	\begin{minted}{prolog}
+	get_sum_cost_owner(Sername, Cost) :-
+	get_own_cost(Sername, building, Building_Cost),
+	get_own_cost(Sername, area, Area_Cost),
+	get_own_cost(Sername, watercraft, Watercraft_Cost),
+	get_own_cost(Sername, car, Car_Cost),
+	Cost = Building_Cost + Area_Cost + Watercraft_Cost + Car_Cost.
+	\end{minted}
+	
+	\textit{Правила для предиката get\_own\_cost:}
+	
+	\begin{minted}{prolog}
+	get_own_cost(Sername, building, Cost) :-
+	owner(Sername, building_owner(_, Cost)),
+	!.
+	
+	get_own_cost(Sername, area, Cost) :-
+	owner(Sername, area_owner(_, Cost)),
+	!.
+	
+	get_own_cost(Sername, watercraft, Cost) :-
+	owner(Sername, watercraft_owner(_, Cost)),
+	!.
+	
+	get_own_cost(Sername, car, Cost) :-
+	owner(Sername, car_owner(_, _, Cost, _)),
+	!.
+	
+	get_own_cost(_, _, Cost):-
+	Cost = 0.
+	\end{minted}
+	
+	\textit{Тестирование правила:}
+	
+	\textit{Пример 1:}
+	
+	\begin{minted}{prolog}
+goal
+	get_sum_cost_owner(levushkin, Cost).
+%Вывод:
+	Cost=3099090
+	1 Solution
+	\end{minted}
+	
+	\textit{Пример 2:}
+	
+	\begin{minted}{prolog}
+goal
+	get_sum_cost_owner(samkov, Cost).
+%Вывод:
+	Cost=91787877
+	1 Solution
+	\end{minted}
+	
+	\textit{Пример 3:}
+	
+		\begin{minted}{prolog}
+goal
+	get_sum_cost_owner(ryazanova, Cost).
+%Вывод:
+	Cost=1987654320
+	1 Solution
+	\end{minted}
+	
+	\newpage
+	
+	\section*{Ответы на вопросы}
+	
+	\subsection*{В каком фрагменте программы сформулировано знание? Это знание о чем на формальном уровне?}
+	
+	Знания размещены в CLAUSES в виде предложений.
+	
+	Они представляют собой знания о некоторой предметной области, формально – отношения между различными объектами.
+	
+	\subsection*{Что содержит тело правила?}
+	
+	Тело правила содержит условие истинности заголовка правила.
+	
+	\subsection*{Что дает использование переменных при формулировании знаний? В чем отличие формулировки знания с помощью термов с одинаковой арностью при использовании одной переменной и при использовании нескольких переменных?}
+	
+	Использование переменных в формулировании знаний позволяют уточнять значения и переносить их «в пространстве и времени».
+	
+	 Формулировка знаний с использованием переменных носит более общий характер по отношению к знанию, состоящему только лишь из констант.
+	 
+	  Использование знаний с одинаковой арностью при использовании одной переменной носит менее общий характер по отношению к знанию с использованием нескольких переменных.
+	
+	\subsection*{С каким квантором переменные входят в правило, в каких пределах переменная уникальна?}
+	
+	Переменные входят в правило с квантором всеобщности («для любого»).
+	
+	Переменные уникальны в пределах предложения.
+	
+	Исключение – анонимные переменные – каждая такая переменная является отдельной сущностью и применяется, когда ее значение неважно для данного предложения.
+	
+	\subsection*{Какова семантика (смысл) предложений раздела DOMAINS?  Когда, где и с какой целью используется это описание?}
+	
+	Предложения в разделе DOMAINS используются для объявления используемых доменов, неявляющимися стандартными доменами в Prolog. 
+	
+	Раздел доменов используется для описания структур (вариантных доменов).
+	
+	\subsection*{Какова семантика (смысл) предложений раздела PREDICATES? Когда, и где используется это описание? С какой целью?}
+	
+	В разделе PREDICATES описываются предикаты, их арность (местность) и домены (типы и природа аргументов).
+	
+	 С помощью описанных предикатов, можно создавать предложения в базе знаний. 
+	 
+	 Предикаты используются для представления, как фактов, так и правил.
+	
+	\subsection*{Унификация каких термов запускается на самом первом шаге работы системы? Каковы назначение и результат использования алгоритма унификации?}
+	
+	На первом шаге работы происходит унификация вопроса и первого предложения базы знаний.
+	
+	Назначение алгоритма унификации заключается в попарном сопоставлении термов и попытке построить для них общий пример. 
+	
+	Результатом использования алгоритма унификации может быть успех или тупиковая ситуация (неудача).
+	
+	\subsection*{В каком случае запускается механизм отката?}
+	
+	Механизм отката запускается, если возникла тупиковая ситуация (достигнут конец БЗ) либо резольвента пуста. В таких случаях происходит откат к предыдущему состоянию резольвенты.
+	
+	\section*{Исправление ошибок 13-ой лабораторной работы.}
+	
+	\subsection*{В таблице:  get\_info\_by\_phone(<<89859771492>>,Sername, Model, Cost)» и
+		get\_info\_by\_phone( Phone, Sername, Model, Cost).
+		Подстановка Phone= «89859771492»   Не полная!!!
+	}
+	
+	Ниже приведены все три исправленные таблицы порядка поиска ответа на вопрос, так как данная ошибка затрагивает их всех:
+	
+	\newpage
+	
+	Таблица для \textit{Фамилия, марка авто и его цена по номеру телефона владельца} примера №1:
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{ 0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_by\_phone(<<89859771492>>, Sername, Model, Cost) и get\_info\_by\_phone(Phone, Sername, Model, Cost). Успех. Подстановка Phone = <<89859771492>>, Sername = Sername, Model = Model, Cost = Cost} & {Прямой ход:
+					
+					phone\_list(Sername, <<89859771492>>, \_)}\\
+				\hline
+				{2} & {Сравнение phone\_list(Sername, <<89859771492>>, \_) и phone\_list(levushkin, <<89859771492>>, \_). Успех. Подстановка Sername = levushkin, <<89859771492>> = <<89859771492>>} & {Прямой ход: 
+					
+					auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{3} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(levushkin, shkoda, \_, 600000, \_). Успех. Подстановка levushkin = levushkin, Model = shkoda, Cost = 600000} & {Вывод: 
+					
+					Sername=levushkin, Model=shkoda,Cost=600000. Откат к auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{4} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(levushkin, volvo, \_, 3000000, \_). Успех. Подстановка levushkin = levushkin, Model = volvo, Cost = 3000000} & {Вывод:
+					
+					Sername=levushkin, Model=volvo,Cost=3000000. Откат к auto(levushkin, Model, \_, Cost, \_}\\
+				\hline
+				{5} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(samkov, volkswagen, \_, 1000000, \_). Неудача (levushkin $\neq$ samkov)} & {Откат к auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{6} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(ryazanova, bugatti, \_, 999999999, \_). Неудача (levushkin $\neq$ ryazanova)} & {Откат к auto(levushkin, Model, \_, Cost, \_), откат к phone\_list(Sername, <<89859771492>>, \_), неудача в поиске дальнейших подстановок <<89859771492>>, откат к get\_info\_by\_phone, неудача в поиске дальнейщих подстановок get\_info\_by\_phone, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m4}
+		\end{center}
+	\end{table}
+	
+	\newpage
+	
+	Таблица для \textit{Марка авто по номеру телефона владельца} примера №1:
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_by\_phone(<<8911911911>>, \_, Model, \_) и get\_info\_by\_phone(Phone, Sername, Model, Cost). Успех. Подстановка Phone = <<8911911911>>, Model = Model.} & {Прямой ход: 
+					
+					phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{2} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(levushkin, <<89859771492>>, \_). Неудача (<<8911911911>> $\neq$ <<89859771492>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{3} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(levushkin, <<89859771493>>, \_). Неудача (<<8911911911>> $\neq$ <<89859771493>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{4} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(samkov, <<89899999>>, \_). Неудача (<<8911911911>> $\neq$ <<89899999>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{5} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(ryazanova, <<8911911911>>, \_). Успех. Подстановка Sername=ryazanova, <<8911911911>> = <<8911911911>>.} & {Прямой ход: 
+					
+					auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{6} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(levushkin, shkoda, \_, \_, \_). Неудача (ryazanova $\neq$ levushkin).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{7} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(levushkin, volvo, \_, \_, \_). Неудача (ryazanova $\neq$ levushkin).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{8} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(samkov, volkswagen, \_, \_, \_). Неудача (ryazanova $\neq$ samkov).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{9} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(ryazanova, bugatti, \_, \_, \_). Успех. Подстановка ryazanova = ryazanova, Model=bugatti.} & {Вывод: 
+					
+					Model=bugatti. откат к auto(ryazanova, Model, \_, \_, \_), откат к phone\_list, откат к get\_info\_by\_phone, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m5}
+		\end{center}
+	\end{table}
+	
+	\newpage
+	
+	Таблица для \textit{Улица проживания, банки и номера телефона по фамилии и городу} примера №1:
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_sername\_town(levushkin, moscow, Street, Bank, Phone) и get\_info\_sername\_town(Sername, Town, Street, Bank, Phone). Успех. Подстановка Sername=levushkin, Town=moscow, Street = Street, Bank = Bank, Phone = Phone.} & {Прямой ход:
+					
+					phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)).}\\
+				\hline
+				{2} & {Сравнение phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)) и phone\_list(levushkin, <<89859771492>>, adr(moscow, kantemirovskaya, \_, \_)). Успех. Подстановка levushkin = levushkin, Phone=<<89859771492>>, moscow = moscow, Street=kantemirovskaya.} & {Прямой ход: 
+					
+					bank\_list(levushkin, Bank, \_, \_).}\\
+				\hline
+				{3} & {Сравнение bank\_list(levushkin, Bank, \_, \_) и bank\_list(levushkin, sberbank, \_, \_). Успех. Подстановка levushkin = levushkin, Bank=sberbank.} & {Вывод:
+					
+					Street=kantemirovskaya, Bank=sberbank, Phone=<<89859771492>>. Откат к bank\_list(levushkin, Bank, \_, \_), неудача в поиске дальнейших подстановок levushkin, откат к phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)).}\\
+				\hline
+				{4} & {Сравнение phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)) и phone\_list(levushkin, <<89859771493>>, adr(moscow, kantemirovskaya, \_, \_)). Успех. Подстановка levushkin = levushkin, Phone=<<89859771493>>, moscow = moscow, Street = kantemirovskaya.} & {Прямой ход:
+					
+					bank\_list(levushkin, Bank, \_, \_).}\\
+				\hline
+				{5} & {Сравнение bank\_list(levushkin, Bank, \_, \_) и bank\_list(levushkin, sberbank, \_, \_). Успех. Подстановка levushkin = levushkin, Bank=sberbank.} & {Вывод:
+					
+					Street=kantemirovskaya, Bank=sberbank, Phone=<<89859771493>>. Откат к bank\_list(levushkin, Bank, \_, \_), неудача в поиске дальнейших подстановок levushkin, откат к phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)), неудача в поиске дальнейших подстановок levushkin, moscow. Откат к get\_info\_sername\_town, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m6}
+		\end{center}
+	\end{table}
+	
+	
+	
+	
+\end{document}

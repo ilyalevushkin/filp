@@ -1,0 +1,649 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T2A]{fontenc}			
+\usepackage[utf8]{inputenc}			
+\usepackage[english,russian]{babel}	
+
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\usepackage{color}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{black}}
+\DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+\usepackage{wasysym}
+
+\usepackage[cache=false]{minted}
+
+\usepackage{graphicx}
+\usepackage{cmap}
+\usepackage{indentfirst}
+
+\usepackage{listings} 
+\usepackage{fancyvrb}
+
+\usepackage{geometry}
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=1cm}
+\geometry{bottom=2cm}
+
+\usepackage{longtable}
+
+\setlength{\parindent}{5ex}
+\setlength{\parskip}{0.5em}
+
+\usepackage{pgfplots}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\begin{document}
+	\lstset{ %
+		language=C,                 % выбор языка для подсветки (здесь это С)
+		basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+		numbers=left,               % где поставить нумерацию строк (слева\справа)
+		numberstyle=\tiny,           % размер шрифта для номеров строк
+		stepnumber=1,                   % размер шага между двумя номерами строк
+		numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+		backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+		showspaces=false,            % показывать или нет пробелы специальными отступами
+		showstringspaces=false,      % показывать или нет пробелы в строках
+		showtabs=false,             % показывать или нет табуляцию в строках
+		frame=single,              % рисовать рамку вокруг кода
+		tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+		captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+		breaklines=true,           % автоматически переносить строки (да\нет)
+		breakatwhitespace=false, % переносить строки только если есть пробел
+		escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+	}
+
+	% Титульный лист
+	\begin{figure}[h!]
+		\begin{center}
+			{\includegraphics[scale = 0.4]{titul.jpg}}
+			\label{titul}
+		\end{center}
+	\end{figure}
+	
+	\vspace*{15mm} 
+	
+	\huge
+	\begin{center}
+		Дисциплина: <<Функциональное и логическое программирование>>
+	\end{center}
+	\vspace*{15mm} 	
+	
+	\begin{center}
+		Исправление ошибок 17, 18, 19, 20 лабораторных работ
+	\end{center}
+	
+	\vspace*{15mm} 	
+	
+	\large
+	\begin{flushright}
+		Студент: Левушкин И. К. \\
+		Группа: ИУ7-62Б \\
+		Преподаватели: Толпинская Н. Б., \\ Строганов Ю. В. \\
+	\end{flushright}
+	
+	\vspace*{30mm}
+	\begin{center}
+		Москва, 2020 г.  
+	\end{center}
+	\thispagestyle{empty}
+	
+	
+	\newpage
+
+	\section*{Исправление ошибок 17-ой лабораторной работы}
+	
+	\subsection*{Замечание}
+	
+	\textit{А нельзя результат сразу определить в заголовке, а потом убедиться в его правильности! Исправьте тексты программ и одну табл.}
+	
+	\subsubsection*{Исправленные тексты программ}
+	
+	\textit{Реализация программы без использования отсечения}
+	
+	\begin{minted}{prolog}
+	
+	domains
+	num1, num2, num3, result = integer
+	predicates
+	max_two(num1, num2, result).
+	max_three(num1, num2, num3, result).
+	clauses
+	max_two(Num1, Num2, Num1) :- Num2 <= Num1.
+	
+	max_two(Num1, Num2, Num2) :- Num2 > Num1.
+	
+	max_three(Num1, Num2, Num3, Num1) :- Num1 >= Num2, Num1 >= Num3.
+	
+	max_three(Num1, Num2, Num3, Num2) :- Num2 > Num1, Num2 > Num3.
+	
+	max_three(Num1, Num2, Num3, Num3) :- Num3 >= Num2, Num3 > Num1.
+	\end{minted}
+	
+	\textit{Реализация программы с использованием отсечения}
+	
+	\begin{minted}{prolog}
+	
+	domains
+	num1, num2, num3, result = integer
+	predicates
+	max_two(num1, num2, result).
+	max_three(num1, num2, num3, result).
+	clauses
+	max_two(Num1, Num2, Num1) :-
+	Num1 > Num2, !.
+	
+	max_two(_, Num2, Num2).
+	
+	
+	max_three(Num1, Num2, Num3, Num1) :-
+	Num1 > Num2, Num1 > Num3, !.
+	
+	max_three(_, Num2, Num3, Num2) :-
+	Num2 > Num3, !.
+	
+	max_three(_, _, Num3, Num3).
+	\end{minted}
+	
+	\subsubsection*{Исправленная таблица для программы с использованием отсечения}
+	
+	\textit{Порядок работы системы для 4 примера:}
+	
+	\begin{minted}{prolog}
+goal
+	
+	max_three(2, 2, 2, Result).
+%Вывод:
+	
+	Result=2
+	1 Solution
+	\end{minted}
+	
+	\begin{center}
+		\begin{longtable}[h!]{|p{0.05\linewidth}|p{0.25\linewidth}|p{ 0.3\linewidth}|p{ 0.3\linewidth}|}
+			
+			\hline
+			
+			{№ шага} & {Состояние 
+				
+				
+				
+				резольвенты, и 
+				
+				
+				
+				вывод: дальнейшие 
+				
+				
+				
+				действия (почему?)} & {Для каких термов 
+				
+				
+				
+				запускается алгоритм 
+				
+				
+				
+				унификации: Т1=Т2 и 
+				
+				
+				
+				каков {\bf результат} (и 
+				
+				
+				
+				подстановка)} & {Дальнейшие действия: 
+				
+				
+				
+				прямой ход или откат 
+				
+				
+				
+				(почему и к чему 
+				
+				
+				
+				приводит?)}\\
+			
+			\hline
+			
+			{1} & {max\_three(2, 2, 2, Result).} & {T1 = max\_three(2, 2, 2, Result);
+				
+				
+				
+				T2 = max\_two(Num1, Num2, Num1). 
+				
+				
+				
+				Неудача (функторы max\_three и max\_two не равны).} & {Прямой ход к следующему предложению.}\\
+			
+			\hline
+			
+			{2} & {max\_three(2, 2, 2, Result).} & {T1 = max\_three(2, 2, 2, Result);
+				
+				
+				
+				T2 = max\_two(\_, Num2, Num2). Неудача (функторы max\_three и max\_two не равны).} & {Прямой ход к следующему преложению.}\\
+			
+			\hline
+			
+			{3} & {max\_three(2, 2, 2, Result).} & {T1 = max\_three(2, 2, 2, Result);
+				
+				
+				
+				T2 = max\_three(Num1, Num2, Num3, Num1).
+				
+				
+				
+				Успех. Подстановка 2 = Num1, 2 = Num2, 2 = Num3, Result = Num1.} & {Прямой ход к 2 > 2.}\\
+			
+			\hline
+			
+			{4} & {2 > 2,
+				
+				
+				
+				2 > 2,
+				
+				
+				
+				Result = 2,
+				
+				!.} & {T1 = 2 > 2.
+				
+				Знак > имеет смысл сравнения, поскольку с обеих сторон от знака находятся конкретные значения. Неудача (2 !> 2).} & {Откат к предыдущему состоянию резольвенты: 
+				
+				max\_three(2, 2, 2, Result), Реконкретизация 2, 2, 2, Result.}\\
+			\hline
+			{5} & {max\_three(2, 2, 2, Result).} & {T1 = max\_three(2, 2, 2, Result);
+				
+				T2 = max\_three(\_, Num2, Num3, Num2).
+				
+				Успех. Подстановка 2 = Num2, 2 = Num3, Result = Num2.} & {Прямой ход к 2 > 2.}\\
+			\hline
+			{6} & {2 > 2,
+				
+				Result = 2,
+				
+				!.} & {T1 = 2 > 2.
+				
+				Знак > имеет смысл сравнения, поскольку с обеих сторон от знака находятся конкретные значения. Неудача (2 !> 2).} & {Откат к предыдущему состоянию резольвенты: 
+				
+				max\_three(2, 2, 2, Result), Реконкретизация 2, 2, Result.}\\
+			
+			\hline
+			
+			{7} & {max\_three(2, 2, 2, Result).} & {T1 = max\_three(2, 2, 2, Result);
+				
+				
+				
+				T2 = max\_three(\_, \_, Num3, Num3).
+				
+				
+				
+				Успех. Подстановка 2 = Num3, Result = Num3.} & {Прямой ход к Result = 2.}\\
+			
+			\hline
+			
+			{8} & {Result = 2.} & {T1 = Result = 2.
+				
+				
+				
+				Знак = имеет смысл присвоения, поскольку с одной из сторон от знака стоит свободная переменная. Подстановка Result = 2.} & {Вывод:
+				
+				
+				
+				Result = 2. Откат к предыдущему состоянию резольвенты:
+				
+				max\_three(2, 2, 2, Result), Реконкретизация 2, 2, 2, Result.}\\
+			
+			\hline
+			
+			{9} & {max\_three(2, 2, 2, Result).
+				
+				
+				
+				конец clauses,
+				
+				
+				
+				опустошение резольвенты,
+				
+				завершение работы.} & {} & {}\\
+			
+			\hline
+			\label{m1}
+		\end{longtable}
+	\end{center}
+	
+	\subsection*{Замечание}
+	
+	\textit{Каково назначение использования алгоритма унификации?}
+		
+	\textit{Назначение алгоритма унификации заключается в попарном сопоставлении НЕТ термов и попытке построить для них общий пример. ЗАЧЕМ???}
+	
+	\subsubsection*{Исправление}
+	
+	Назначение использования алгоритма унификации двух термов состоит в том, чтобы подобрать нужное в данный момент правило.
+	
+	\subsection*{Замечание}
+	
+	Каков результат работы алгоритма унификации? 
+	
+	Результатом использования алгоритма унификации может быть успех или тупиковая ситуация (неудача).
+	
+	\textit{Результатом – не подстановка??}
+	
+	\subsubsection*{Исправление}
+	
+	Результатом использования алгоритма унификации может быть успех согласования базы знаний и вопроса, в качестве побочного эффекта формируется подстановка; или может быть тупиковая ситуация (неудача).
+	
+	\section*{Исправление ошибок 18-ой лабораторной работы}
+	
+	\subsection*{Замечание}
+	
+	
+	\textit{factorial\_help: А нельзя в  1-м правиле Rezult определить в заголовке?}
+	
+	\textit{Factorial  А Help не всегда =1??? Можно прямо в терме!}
+
+	\subsubsection*{Исправленный текст программы n!}
+	
+	\begin{minted}{prolog}
+	domains
+	
+	num, help, result = integer
+	
+	predicates
+	
+	factorial(num, result)
+	factorial_help(num, help, result)
+	
+	clauses
+	
+	factorial_help(1, Help, Help) :- !.
+	
+	factorial_help(Num, Help, Result) :- 
+	Help1 = Help * Num, Num1 = Num - 1, 
+	factorial_help(Num1, Help1, Result).
+	
+	
+	factorial(0, 1) :-!.
+	
+	factorial(Num, Result) :- factorial_help(Num, 1, Result).
+	\end{minted}
+	
+	\subsection*{Замечание}
+	
+	\textit{Таблица: T1 = factorial(0, Result);}
+	
+	\textit{T2 = factorial(0, 1). Успех.}
+	
+	\textit{Подстановка{ 0 = 0, Result = 1} константы в подстановку не заносятся!}
+	
+	\textit{И что на этом работа системы заканчивается???  ИСПРАВИТЬ!!}
+	
+	\subsubsection*{Исправленная таблица для программы n!}
+	
+	\textit{Порядок работы системы для 3 примера:}
+	
+	
+	\begin{minted}{prolog}
+goal
+	factorial(0, Result).
+%Вывод:
+	Result=1
+	1 Solution
+	\end{minted}
+	
+	\begin{center}
+		\begin{longtable}[h!]{|p{0.05\linewidth}|p{0.25\linewidth}|p{ 0.3\linewidth}|p{ 0.3\linewidth}|}
+			\hline
+			{№ шага} & {Состояние 
+				
+				резольвенты, и 
+				
+				вывод: дальнейшие 
+				
+				действия (почему?)} & {Для каких термов 
+				
+				запускается алгоритм 
+				
+				унификации: Т1=Т2 и 
+				
+				каков {\bf результат} (и 
+				
+				подстановка)} & {Дальнейшие действия: 
+				
+				прямой ход или откат 
+				
+				(почему и к чему 
+				
+				приводит?)}\\
+			\hline
+			{1} & {factorial(0, Result).} & {T1 = factorial(0, Result);
+				
+				T2 = factorial\_help(1, Help, Result).
+				
+				Неудача (функторы factorial и factorial\_help не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{2} & {factorial(0, Result).} & {T1 = factorial(0, Result);
+				
+				T2 = factorial\_help(Num, Help, Result).
+				
+				Неудача (функторы factorial и factorial\_help не равны).} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{3} & {factorial(0, Result).} & {T1 = factorial(0, Result);
+				
+				T2 = factorial(0, 1).
+				
+				0 = 0, Result = 1 успех (подобрано знание) => Подстановка \{Result = 1\}.} & {Проверка тела правила factorial(0, 1).}\\
+			\hline
+			{4} & {!} & {Удаление из памяти альтернативных путей унификации цели
+				
+				Успех - ответ - <<Result = 1>>, метка на правиле factorial(0, 1).} & {Других альтернатив нет => система завершает работу с единственным результатом - <<Result = 1>>.}\\
+			\hline
+			\label{m2}
+		\end{longtable}
+	\end{center}
+
+	\subsection*{Замечание}
+	
+	\textit{fib\_help(\_, Second, Help, Num, Result) :   проверки  Help = Num, Result = Second можно перенести в заголовок!}
+	
+	\subsubsection*{Исправленный текст программы n-е число Фибоначчи}
+	
+	\begin{minted}{prolog}
+	domains
+	
+	elem, num, help, result = integer
+	
+	predicates
+	
+	fib(num, result)
+	fib_help(elem First, elem Second, help, num, result)
+	
+	clauses
+	
+	fib_help(_, Second, Num, Num, Second) :- !.
+	
+	fib_help(First, Second, Help, Num, Result) :- 
+	New_second = First + Second,
+	New_help = Help + 1, 
+	fib_help(Second, New_second, New_help, Num, Result).
+	
+	
+	fib(0, 1) :-!.
+	
+	fib(Num, Result) :- 
+	fib_help(1, 1, 1, Num, Result).
+	\end{minted}
+	
+	\section*{Исправление ошибок 19-ой лабораторной работы}
+	
+	\subsection*{Замечание}
+	
+	\textit{Не поняла: Где CLAUSES?}
+	
+	\subsubsection*{Исправление}
+	
+	Прошу прощения, при конвертации из pdf в doc clauses съехали на предыдущую строку
+	
+	\textit{Исправленный текст программы <<найти длину списка (по верхнему уровню)>>}
+	
+	\begin{minted}{prolog}
+domains
+	
+	lst = integer*
+	count, sum = integer
+	predicates
+	
+	len_list(lst, count).
+	len_list_help(lst, count Help, count Result).
+clauses
+	
+	len_list_help([], Help, Help).
+	len_list_help([_|T], Help, Answer) :- 
+	Next_help = Help + 1, len_list_help(T, Next_help, Answer).
+	
+	len_list(List, Answer) :- len_list_help(List, 0, Answer).
+	\end{minted}
+	
+	\subsection*{Замечание}
+	
+	\textit{найти сумму элементов числового списка, стоящих на нечетных позициях}
+	
+	\textit{А нельзя в заголовке выделить сразу два элемента?}
+	
+	\subsubsection*{Исправленный текст программы <<найти сумму элементов числового списка, стоящих на нечетных позициях исходного списка (нумерация от 0)>>}
+	
+	\begin{minted}{prolog}
+domains
+	
+	lst = integer*
+	count, sum = integer
+	predicates
+	
+	sum_odd_list(lst, sum).
+	sum_odd_list_help(lst, sum Help, sum Answer).
+clauses
+	
+	sum_odd_list_help([], Help, Help).
+	
+	sum_odd_list_help([_|[]], Help, Help) :-!.
+	
+	sum_odd_list_help([_, Next_H|T], Help, Answer) :-
+	New_help = Help + Next_H, 
+	sum_odd_list_help(T, New_help, Answer).
+	
+	sum_odd_list(List, Answer) :- sum_odd_list_help(List, 0, Answer).
+	\end{minted}
+	
+	
+	\section*{Исправление ошибок 20-ой лабораторной работы}
+	
+	\subsection*{Замечание}
+	
+	\textit{сформировать список из элементов числового списка, больших заданного значения}
+	
+	\textit{list\_create\_help([], \_, Help, Help). А результат не пустой список?}
+	
+	\textit{А незя формирование нового списка перенести в заголовок и Help не нужен?}
+	
+	\subsubsection*{Исправленный текст программы <<сформировать список из элементов числового списка, больших заданного значения>>.}
+	
+	\begin{minted}{prolog}
+domains
+	
+	lstI = integer*
+	number = integer
+predicates
+	
+	list_create(lstI, number, lstI)
+clauses
+	list_create([], _, []).
+	
+	list_create([H|T], Number, [H|T2]) :-
+	H > Number, list_create(T, Number, T2), !.
+	
+	list_create([_|T], Number, T2) :-
+	list_create(T, Number, T2).
+	\end{minted}
+	
+	\subsection*{Замечание}
+	
+	\textit{Объясните обязательность  ! во 2-м правиле}
+	
+	\subsubsection*{Объяснение ! во 2-ом правиле}
+	
+	Предикат отсечения нужен во 2-ом правиле, чтобы отсечь бесперспективный путь доказательства, в данном случае это 3-е правило list\_create([\_|T], Number, T2), поскольку если элемент списка больше заданного значения, необходимо добавить его в результирующий список, применив правило 2, а третье правило служит для тех случаев, когда элемент списка не больше заданного значения, соответственно, применять 3-е правило, если 2-е правило успешно, не нужно.
+	
+	В противном же случае, мы получим несколько решений, вместо одного необходимого.
+	
+	\subsection*{Замечание}
+	
+	\textit{список из элементов, стоящих на нечетных позициях: Выделяйте срвзу по два элемента!}
+	
+	\subsubsection*{Исправленный текст программы <<сформировать список из элементов, стоящих на нечетных позициях исходного списка (нумерация от 0)>>}
+	
+	\begin{minted}{prolog}
+domains
+	
+	lstI = integer*
+	number = integer
+predicates
+	
+	odd_list_help(lstI, lstI, lstI)
+	odd_list(lstI, lstI)
+clauses
+	
+	odd_list_help([], Help, Help).
+	
+	odd_list_help([_|[]], Help, Help) :-!.
+	
+	odd_list_help([_, Next_H|T], Help, Answer) :-
+	odd_list_help(T,  [Next_H|Help], Answer).
+	
+	odd_list(List, Answer) :- odd_list_help(List, [], Answer).
+	\end{minted}
+	
+	\subsection*{Замечание}
+	
+	\textit{удалить заданный элемент Зачем reverse?}
+	
+	\subsubsection*{Объяснение}
+	
+	Поскольку элементы последовательно добавляются в голову результирующего списка, полученный результат будет перевернутый. Поэтому, в правиле, предназначенном для выхода из рекурсии вызывается правило reverse(Help, Answer), которое переворачивает список.
+	
+	Но можно обойтись и без reverse.
+	
+	\subsubsection*{Исправленный текст программы <<удалить заданный элемент из списка (один или все вхождения)>>}
+	
+	\begin{minted}{prolog}
+domains
+	lstI = integer*
+	number = integer
+predicates
+	delete_elem_from_list(lstI, number, lstI)
+clauses
+	delete_elem_from_list([], _, []).
+	
+	delete_elem_from_list([H|T], Number, [H|T3]) :-
+	H <> Number, delete_elem_from_list(T, Number, T3),!.
+	
+	delete_elem_from_list([_|T], Number, T3) :-
+	delete_elem_from_list(T, Number, T3).
+	\end{minted}
+	
+
+\end{document}

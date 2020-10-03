@@ -1,0 +1,564 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T2A]{fontenc}			
+\usepackage[utf8]{inputenc}			
+\usepackage[english,russian]{babel}	
+
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\usepackage{color}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{black}}
+\DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+\usepackage{wasysym}
+
+\usepackage[cache=false]{minted}
+
+\usepackage{graphicx}
+\usepackage{cmap}
+\usepackage{indentfirst}
+
+\usepackage{listings} 
+\usepackage{fancyvrb}
+
+\usepackage{geometry}
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=1cm}
+\geometry{bottom=2cm}
+
+
+\setlength{\parindent}{5ex}
+\setlength{\parskip}{0.5em}
+
+\usepackage{pgfplots}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\begin{document}
+	\lstset{ %
+		language=C,                 % выбор языка для подсветки (здесь это С)
+		basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+		numbers=left,               % где поставить нумерацию строк (слева\справа)
+		numberstyle=\tiny,           % размер шрифта для номеров строк
+		stepnumber=1,                   % размер шага между двумя номерами строк
+		numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+		backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+		showspaces=false,            % показывать или нет пробелы специальными отступами
+		showstringspaces=false,      % показывать или нет пробелы в строках
+		showtabs=false,             % показывать или нет табуляцию в строках
+		frame=single,              % рисовать рамку вокруг кода
+		tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+		captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+		breaklines=true,           % автоматически переносить строки (да\нет)
+		breakatwhitespace=false, % переносить строки только если есть пробел
+		escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+	}
+	
+	% Титульный лист
+	\begin{figure}[h!]
+		\begin{center}
+			{\includegraphics[scale = 0.4]{titul.jpg}}
+			\label{titul}
+		\end{center}
+	\end{figure}
+	
+	\vspace*{15mm} 
+	
+	\huge
+	\begin{center}
+		Дисциплина: <<Функциональное и логическое программирование>>
+	\end{center}
+	\vspace*{15mm} 	
+	
+	\begin{center}
+		Лабораторная работа №13
+	\end{center}
+	
+	\vspace*{15mm} 	
+	
+	\large
+	\begin{flushright}
+		Студент: Левушкин И. К. \\
+		Группа: ИУ7-62Б \\
+		Преподаватели: Толпинская Н. Б., \\ Строганов Ю. В. \\
+	\end{flushright}
+	
+	\vspace*{30mm}
+	\begin{center}
+		Москва, 2020 г.  
+	\end{center}
+	\thispagestyle{empty}
+	
+	
+	\newpage
+	
+	\section*{Цель работы}
+	
+	Получить навыки построения модели предметной области, разработки и оформления программы на Prolog, изучить принципы, логику формирования программы и отдельные шаги выполнения программы на Prolog.
+	
+	\section*{Задачи работы}
+	
+	Приобрести навыки декларативного описания предметной области с использованием фактов и правил.
+	Изучить способы использования термов, переменных, фактов и правил в программе на Prolog, принципы  и правила сопоставления и отождествления, порядок унификации.
+	
+	\section*{Задание}
+	
+	Составить программу, т.е. модель предметной области – базу знаний, объединив в ней информацию – знания:
+	\begin{itemize}
+		\item <<{\bf Телефонный справочник}>>: Фамилия, №тел, Адрес – структура (Город, Улица, №дома, №кв),
+		\item <<{\bf Автомобили}>>: Фамилия владельца, Марка, Цвет, Стоимость, и др.,
+		\item <<{\bf Вкладчики банков}>>: Фамилия, Банк, счет, сумма, др.
+	\end{itemize}
+
+	Владелец может иметь несколько телефонов, автомобилей, вкладов (Факты).
+	Используя правила, обеспечить возможность поиска:
+	\begin{enumerate}
+		\item {\bf а)} По № телефона найти: Фамилию, Марку автомобиля, Стоимость автомобиля (может быть несколько),
+		
+		{\bf в)} Используя сформированное в пункте {\bf а)} правило, по № телефона найти: только Марку автомобиля (автомобилей может быть несколько),
+		\item Используя простой, не составной вопрос: по Фамилии (уникальна в городе, но в разных городах есть однофамильцы) и Городу проживания найти:  Улицу проживания, Банки, в которых есть вклады и №телефона.
+	\end{enumerate}
+
+	Для задания1 и задания2: 
+	для одного из вариантов ответов, и для {\bf а)} и для {\bf в), описать словесно} порядок поиска ответа на вопрос, указав, как выбираются знания, и, при этом, {\bf для каждого этапа унификации, выписать подстановку} – наибольший общий унификатор, {\bf и соответствующие примеры} термов.
+	
+	\newpage
+	
+	\section*{Реализация программы}
+	
+	\begin{minted}{prolog}
+domains
+address = adr(symbol, symbol, integer, integer).
+predicates
+phone_list(symbol Sername, string Phone, address Address).
+auto(symbol Sername, symbol Model, symbol Color, integer Cost, 
+integer Probeg).
+bank_list(symbol Sername, symbol Bank, integer Account, integer Money).
+
+get_info_by_phone(string Phone, symbol Sername, symbol Model, 
+integer Cost).
+
+get_info_sername_town(symbol Sername, symbol Town, symbol Street, 
+symbol Bank, string Phone).
+clauses
+phone_list(levushkin, "89859771492", adr(moscow, kantemirovskaya, 5, 1)).
+phone_list(levushkin, "89859771493", adr(moscow, kantemirovskaya, 5, 1)).
+phone_list(samkov, "89899999", adr(chelyabinsk, pushkinskaya, 4, 2)).
+phone_list(ryazanova, "8911911911", adr(moscow, baumanskaya, 9, 9)).
+
+auto(levushkin, shkoda, orange, 600000, 10000).
+auto(levushkin, volvo, grey, 3000000, 1000).
+auto(samkov, volkswagen, pink, 1000000, 99999).
+auto(ryazanova, bugatti, gold, 999999999, 1).
+
+
+bank_list(levushkin, sberbank, 1111, 900000).
+bank_list(samkov, sberbank, 2222, 100).
+bank_list(ryazanova, tinkoff, 3333, 99999999).
+bank_list(ryazanova, raiffeisen, 4444, 888888888).
+
+get_info_by_phone(Phone, Sername, Model, Cost) :- 
+phone_list(Sername, Phone, _),
+auto(Sername, Model, _, Cost, _).
+
+get_info_sername_town(Sername, Town, Street, Bank, Phone) :- 
+phone_list(Sername, Phone, adr(Town, Street, _, _)),
+bank_list(Sername, Bank, _, _).
+	\end{minted}
+	
+	\newpage
+	
+	\section*{Тесты}
+	
+	\subsection*{Фамилия, марка авто и его цена по номеру телефона владельца.}
+	
+	\subsubsection*{Пример №1.}
+	
+	\begin{minted}{prolog}
+goal
+	get_info_by_phone("89859771492", Sername, Model, Cost).
+	
+%Вывод:
+	Sername=levushkin, Model=shkoda, Cost=600000
+	Sername=levushkin, Model=volvo, Cost=3000000
+	2 Solutions
+	\end{minted}
+	
+	\newpage
+	
+	\subsubsection*{Порядок поиска ответа на вопрос}
+	
+	Вопрос будет сопоставляться с каждым предложением сверху вниз, пока не
+	найдется подходящий функтор. В таблице описаны ключевые шаги последующего поиска.
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{ 0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_by\_phone(<<89859771492>>, Sername, Model, Cost) и get\_info\_by\_phone(Phone, Sername, Model, Cost). Успех. Подстановка Phone = <<89859771492>>} & {Прямой ход:
+					
+					 phone\_list(Sername, <<89859771492>>, \_)}\\
+				\hline
+				{2} & {Сравнение phone\_list(Sername, <<89859771492>>, \_) и phone\_list(levushkin, <<89859771492>>, \_). Успех. Подстановка Sername = levushkin} & {Прямой ход: 
+					
+					 auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{3} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(levushkin, shkoda, \_, 600000, \_). Успех. Подстановка Model = shoda, Cost = 600000} & {Вывод: 
+					
+					 Sername=levushkin, Model=shkoda,Cost=600000. Откат к auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{4} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(levushkin, volvo, \_, 3000000, \_). Успех. Подстановка Model = volvo, Cost = 3000000} & {Вывод:
+					
+					 Sername=levushkin, Model=volvo,Cost=3000000. Откат к auto(levushkin, Model, \_, Cost, \_}\\
+				\hline
+				{5} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(samkov, volkswagen, \_, 1000000, \_). Неудача (levushkin $\neq$ samkov)} & {Откат к auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{6} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(ryazanova, bugatti, \_, 999999999, \_). Неудача (levushkin $\neq$ ryazanova)} & {Откат к auto(levushkin, Model, \_, Cost, \_), откат к phone\_list(Sername, <<89859771492>>, \_), неудача в поиске дальнейших подстановок <<89859771492>>, откат к get\_info\_by\_phone, неудача в поиске дальнейщих подстановок get\_info\_by\_phone, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m1}
+		\end{center}
+	\end{table}
+
+\newpage
+	
+	\subsection*{Марка авто по номеру телефона владельца.}
+	
+	\subsubsection*{Пример №1.}
+	
+	\begin{minted}{prolog}
+goal
+	get_info_by_phone("8911911911", _, Model, _).
+	
+%Вывод:
+	Model=bugatti
+	1 Solution
+	\end{minted}
+	
+	\subsubsection*{Порядок поиска ответа на вопрос}
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_by\_phone(<<8911911911>>, \_, Model, \_) и get\_info\_by\_phone(Phone, Sername, Model, Cost). Успех. Подстановка Phone = <<8911911911>>.} & {Прямой ход: 
+					
+					 phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{2} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(levushkin, <<89859771492>>, \_). Неудача (<<8911911911>> $\neq$ <<89859771492>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{3} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(levushkin, <<89859771493>>, \_). Неудача (<<8911911911>> $\neq$ <<89859771493>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{4} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(samkov, <<89899999>>, \_). Неудача (<<8911911911>> $\neq$ <<89899999>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{5} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(ryazanova, <<8911911911>>, \_). Успех. Подстановка Sername=ryazanova.} & {Прямой ход: 
+					
+					 auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{6} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(levushkin, shkoda, \_, \_, \_). Неудача (ryazanova $\neq$ levushkin).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{7} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(levushkin, volvo, \_, \_, \_). Неудача (ryazanova $\neq$ levushkin).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{8} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(samkov, volkswagen, \_, \_, \_). Неудача (ryazanova $\neq$ samkov).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{9} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(ryazanova, bugatti, \_, \_, \_). Успех. Подстановка Model=bugatti.} & {Вывод: 
+					
+					 Model=bugatti. откат к auto(ryazanova, Model, \_, \_, \_), откат к phone\_list, откат к get\_info\_by\_phone, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m2}
+		\end{center}
+	\end{table}
+
+\newpage
+	
+	\subsection*{Улица проживания, банки и номера телефона по фамилии и городу.}
+	
+	\subsubsection*{Пример №1.}
+	
+	\begin{minted}{prolog}
+goal
+	get_info_sername_town(levushkin, moscow, Street, Bank, Phone).
+	
+%Вывод:
+	Street=kantemirovskaya, Bank=sberbank, Phone=89859771492
+	Street=kantemirovskaya, Bank=sberbank, Phone=89859771493
+	2 Solutions
+	\end{minted}
+	
+	\newpage
+	
+	\subsubsection*{Порядок поиска ответа на вопрос}
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{0.4\linewidth}|}
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_sername\_town(levushkin, moscow, Street, Bank, Phone) и get\_info\_sername\_town(Sername, Town, Street, Bank, Phone). Успех. Подстановка Sername=levushkin, Town=moscow.} & {Прямой ход:
+					
+					 phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)).}\\
+				\hline
+				{2} & {Сравнение phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)) и phone\_list(levushkin, <<89859771492>>, adr(moscow, kantemirovskaya, \_, \_)). Успех. Подстановка Phone=<<89859771492>>, Street=kantemirovskaya.} & {Прямой ход: 
+					
+					bank\_list(levushkin, Bank, \_, \_).}\\
+				\hline
+				{3} & {Сравнение bank\_list(levushkin, Bank, \_, \_) и bank\_list(levushkin, sberbank, \_, \_). Успех. Подстановка Bank=sberbank.} & {Вывод:
+					
+					 Street=kantemirovskaya, Bank=sberbank, Phone=<<89859771492>>. Откат к bank\_list(levushkin, Bank, \_, \_), неудача в поиске дальнейших подстановок levushkin, откат к phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)).}\\
+				\hline
+				{4} & {Сравнение phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)) и phone\_list(levushkin, <<89859771493>>, adr(moscow, kantemirovskaya, \_, \_)). Успех. Подстановка Phone=<<89859771493>>.} & {Прямой ход:
+					
+					 bank\_list(levushkin, Bank, \_, \_).}\\
+				\hline
+				{5} & {Сравнение bank\_list(levushkin, Bank, \_, \_) и bank\_list(levushkin, sberbank, \_, \_). Успех. Подстановка Bank=sberbank.} & {Вывод:
+					
+					 Street=kantemirovskaya, Bank=sberbank, Phone=<<89859771493>>. Откат к bank\_list(levushkin, Bank, \_, \_), неудача в поиске дальнейших подстановок levushkin, откат к phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)), неудача в поиске дальнейших подстановок levushkin, moscow. Откат к get\_info\_sername\_town, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m3}
+		\end{center}
+	\end{table}
+
+\newpage
+	
+	\subsubsection*{Пример №2.}
+	
+	\begin{minted}{prolog}
+goal
+	get_info_sername_town(samkov, chelyabinsk, Sername, Bank, Phone).
+	
+%Вывод:
+	Sername=pushkinskaya, Bank=sberbank, Phone=89899999
+	1 Solution
+	\end{minted}
+	
+	\newpage
+	
+	\section*{Ответы на вопросы}
+	
+	\subsection*{1.	Что такое терм?}
+	
+	Терм является основным элементом языка. Терм:
+	
+	\begin{itemize}
+		\item константа (число, символьный атом, строка);
+		\item переменная (именованная, анонимная);
+		\item составной терм (средство организации группы отдельных элементов знаний в единый объект).
+	\end{itemize}
+	
+	\subsection*{2.	Что такое предикат в матлогике (математике)?}
+	
+	Предикат – функция с областью значений ${0,1}$ ({<<Истина>>, <<Ложь>>}), определённая на $n$-й декартовой степени множества $M$,
+	то есть каждый кортеж из $n$ элементов $M$ характеризуется либо как <<Истина>>, либо как <<Ложь>>.
+	
+	\subsection*{3.	Что описывает предикат в Prolog?}
+	
+	Предикат в \textit{Prolog} - отношение, определяемое процедурой (совокупностью правил).
+	
+	\subsection*{4.	Назовите виды предложений в программе и приведите примеры таких предложений из Вашей программы. Какие предложения являются основными, а какие – не основными?  Каковы: синтаксис и семантика (формальный смысл) этих предложений (основных и неосновных)?}
+	
+	Виды предложений:
+	
+	\begin{itemize}
+		\item Правило. Синтаксис: \textit{заголовок :- тело} (заголовок и тело – термы, \textit{:-} – специальный разделитель).
+		
+		Пример:
+		
+		\item Факт. Является частным случаем правила - отсутствует тело.
+		
+		Пример:
+		
+		
+		\item Вопрос - специфичный вид предложения. Вопрос состоит только из тела. Вопросы используются для выяснения выполнимости некоторого отношения между описанными в программе объектами. 
+		
+		Пример:
+		
+		
+	\end{itemize}
+
+	Основные предложения - предложения, которые не содержат переменные.
+	
+	Неосновные предложения - предложения, которые в момент фиксации в программе содержат переменные.
+	
+	\subsection*{5.	Каковы назначение, виды и особенности использования переменных в программе на Prolog? Какое предложение БЗ сформулировано в более общей – абстрактной форме: содержащее или не содержащее переменных?}
+	
+	\subsubsection*{Назначение переменных}
+	
+	Переменные предназначены для передачи значений в программе. Они являются частью процесса сопоставления и не являются <<хранилищем>> информации.
+	
+	\subsubsection*{Виды переменных}
+	
+	\begin{itemize}
+		\item Именованные – обозначается комбинацией символов латинского алфавита,
+		цифр и символа подчеркивания, начинающейся с прописной буквы или
+		символа подчеркивания. Уникальны в рамках одного предложения.
+		\item Анонимные – обозначаются символом подчеркивания. Любая анонимная
+		переменная уникальна.
+	\end{itemize}
+
+	\subsubsection*{Особенности использования}
+	
+	Во время вычисления именованные переменные могут конкретизироваться
+	(связываться с различными объектами), причем она может быть переконкретизирована, путем отката вычислительного процесса и отмены ранее проведенной конкретизации для нахождения новых решений.
+	
+	Анонимные переменные не могут быть связаны со значениями.
+	
+	\subsubsection*{Предложение Базы Знаний}
+	
+	Предложение БЗ, содержащее переменные сформулировано в более общей
+	– абстрактной форме, так как позволяет использовать подстановку для поиска
+	множества значений в БЗ.
+	
+	\subsection*{6.	Что такое подстановка?}
+	
+	Подстановка – множество пар вида ${X_i = t_i}$, где $X_i$ – переменная, а $t_i$
+	– терм. Суть подстановки заключается в конкретизации переменной термом
+	(переменные заменяются на соответсвтующие термы).
+	
+	\subsection*{7.	Что такое пример терма? Как и когда строится? Как Вы думаете, система строит и хранит примеры?}
+	
+	Терм $B$ называется примером терма $A$, если существует подстановка к терму $A$, равная $B$.
+	
+	Пример терма строится при доказательстве цели и хранится
+	до получения конечного ответа либо до отката.
+	
+	\section*{Исправление ошибок}
+	
+	\subsection*{В таблице:  get\_info\_by\_phone(<<89859771492>>,Sername, Model, Cost)» и
+		get\_info\_by\_phone( Phone, Sername, Model, Cost).
+		Подстановка Phone= «89859771492»   Не полная!!!
+	}
+
+	Ниже приведены все три исправленные таблицы порядка поиска ответа на вопрос, так как данная ошибка затрагивает их всех:
+	
+	\newpage
+	
+	Таблица для \textit{Фамилия, марка авто и его цена по номеру телефона владельца} примера №1:
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{ 0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_by\_phone(<<89859771492>>, Sername, Model, Cost) и get\_info\_by\_phone(Phone, Sername, Model, Cost). Успех. Подстановка Phone = <<89859771492>>, Sername = Sername, Model = Model, Cost = Cost} & {Прямой ход:
+					
+					phone\_list(Sername, <<89859771492>>, \_)}\\
+				\hline
+				{2} & {Сравнение phone\_list(Sername, <<89859771492>>, \_) и phone\_list(levushkin, <<89859771492>>, \_). Успех. Подстановка Sername = levushkin, <<89859771492>> = <<89859771492>>} & {Прямой ход: 
+					
+					auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{3} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(levushkin, shkoda, \_, 600000, \_). Успех. Подстановка levushkin = levushkin, Model = shkoda, Cost = 600000} & {Вывод: 
+					
+					Sername=levushkin, Model=shkoda,Cost=600000. Откат к auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{4} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(levushkin, volvo, \_, 3000000, \_). Успех. Подстановка levushkin = levushkin, Model = volvo, Cost = 3000000} & {Вывод:
+					
+					Sername=levushkin, Model=volvo,Cost=3000000. Откат к auto(levushkin, Model, \_, Cost, \_}\\
+				\hline
+				{5} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(samkov, volkswagen, \_, 1000000, \_). Неудача (levushkin $\neq$ samkov)} & {Откат к auto(levushkin, Model, \_, Cost, \_)}\\
+				\hline
+				{6} & {Сравнение auto(levushkin, Model, \_, Cost, \_) и auto(ryazanova, bugatti, \_, 999999999, \_). Неудача (levushkin $\neq$ ryazanova)} & {Откат к auto(levushkin, Model, \_, Cost, \_), откат к phone\_list(Sername, <<89859771492>>, \_), неудача в поиске дальнейших подстановок <<89859771492>>, откат к get\_info\_by\_phone, неудача в поиске дальнейщих подстановок get\_info\_by\_phone, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m4}
+		\end{center}
+	\end{table}
+	
+	\newpage
+	
+	Таблица для \textit{Марка авто по номеру телефона владельца} примера №1:
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_by\_phone(<<8911911911>>, \_, Model, \_) и get\_info\_by\_phone(Phone, Sername, Model, Cost). Успех. Подстановка Phone = <<8911911911>>, Model = Model.} & {Прямой ход: 
+					
+					phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{2} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(levushkin, <<89859771492>>, \_). Неудача (<<8911911911>> $\neq$ <<89859771492>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{3} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(levushkin, <<89859771493>>, \_). Неудача (<<8911911911>> $\neq$ <<89859771493>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{4} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(samkov, <<89899999>>, \_). Неудача (<<8911911911>> $\neq$ <<89899999>>).} & {Откат к phone\_list(Sername, <<8911911911>>, \_).}\\
+				\hline
+				{5} & {Сравнение phone\_list(Sername, <<8911911911>>, \_) и phone\_list(ryazanova, <<8911911911>>, \_). Успех. Подстановка Sername=ryazanova, <<8911911911>> = <<8911911911>>.} & {Прямой ход: 
+					
+					auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{6} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(levushkin, shkoda, \_, \_, \_). Неудача (ryazanova $\neq$ levushkin).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{7} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(levushkin, volvo, \_, \_, \_). Неудача (ryazanova $\neq$ levushkin).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{8} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(samkov, volkswagen, \_, \_, \_). Неудача (ryazanova $\neq$ samkov).} & {Откат к auto(ryazanova, Model, \_, \_, \_).}\\
+				\hline
+				{9} & {Сравнение auto(ryazanova, Model, \_, \_, \_) и auto(ryazanova, bugatti, \_, \_, \_). Успех. Подстановка ryazanova = ryazanova, Model=bugatti.} & {Вывод: 
+					
+					Model=bugatti. откат к auto(ryazanova, Model, \_, \_, \_), откат к phone\_list, откат к get\_info\_by\_phone, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m5}
+		\end{center}
+	\end{table}
+	
+	\newpage
+	
+	Таблица для \textit{Улица проживания, банки и номера телефона по фамилии и городу} примера №1:
+	
+	\begin{table} [h!]
+		\begin{center}
+			\begin{tabular}{|p{0.05\linewidth}|p{0.5\linewidth}|p{0.4\linewidth}|}
+				\hline
+				{\bf  № шага} & {\bf Сравниваемые термы; результат; подстановка, если есть} & {\bf Дальнейшие действия: прямой ход или откат (к чему приводит?)} \\
+				\hline
+				{1} & {Сравнение get\_info\_sername\_town(levushkin, moscow, Street, Bank, Phone) и get\_info\_sername\_town(Sername, Town, Street, Bank, Phone). Успех. Подстановка Sername=levushkin, Town=moscow, Street = Street, Bank = Bank, Phone = Phone.} & {Прямой ход:
+					
+					phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)).}\\
+				\hline
+				{2} & {Сравнение phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)) и phone\_list(levushkin, <<89859771492>>, adr(moscow, kantemirovskaya, \_, \_)). Успех. Подстановка levushkin = levushkin, Phone=<<89859771492>>, moscow = moscow, Street=kantemirovskaya.} & {Прямой ход: 
+					
+					bank\_list(levushkin, Bank, \_, \_).}\\
+				\hline
+				{3} & {Сравнение bank\_list(levushkin, Bank, \_, \_) и bank\_list(levushkin, sberbank, \_, \_). Успех. Подстановка levushkin = levushkin, Bank=sberbank.} & {Вывод:
+					
+					Street=kantemirovskaya, Bank=sberbank, Phone=<<89859771492>>. Откат к bank\_list(levushkin, Bank, \_, \_), неудача в поиске дальнейших подстановок levushkin, откат к phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)).}\\
+				\hline
+				{4} & {Сравнение phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)) и phone\_list(levushkin, <<89859771493>>, adr(moscow, kantemirovskaya, \_, \_)). Успех. Подстановка levushkin = levushkin, Phone=<<89859771493>>, moscow = moscow, Street = kantemirovskaya.} & {Прямой ход:
+					
+					bank\_list(levushkin, Bank, \_, \_).}\\
+				\hline
+				{5} & {Сравнение bank\_list(levushkin, Bank, \_, \_) и bank\_list(levushkin, sberbank, \_, \_). Успех. Подстановка levushkin = levushkin, Bank=sberbank.} & {Вывод:
+					
+					Street=kantemirovskaya, Bank=sberbank, Phone=<<89859771493>>. Откат к bank\_list(levushkin, Bank, \_, \_), неудача в поиске дальнейших подстановок levushkin, откат к phone\_list(levushkin, Phone, adr(moscow, Street, \_, \_)), неудача в поиске дальнейших подстановок levushkin, moscow. Откат к get\_info\_sername\_town, завершение унификации.}\\
+				\hline
+			\end{tabular}  
+			\label{m6}
+		\end{center}
+	\end{table}
+
+	\newpage
+	
+	\subsection*{Пример терма строится при доказательстве цели и хранится до получения
+конечного ответа либо до отката.   ЗАЧЕМ?
+	}
+
+
+
+	
+\end{document}

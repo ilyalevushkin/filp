@@ -1,0 +1,666 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T2A]{fontenc}			
+\usepackage[utf8]{inputenc}			
+\usepackage[english,russian]{babel}	
+
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\usepackage{color}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{black}}
+\DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+\usepackage{wasysym}
+
+\usepackage[cache=false]{minted}
+
+\usepackage{graphicx}
+\usepackage{cmap}
+\usepackage{indentfirst}
+
+\usepackage{listings} 
+\usepackage{fancyvrb}
+
+\usepackage{geometry}
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=1cm}
+\geometry{bottom=2cm}
+
+\usepackage{longtable}
+
+\setlength{\parindent}{5ex}
+\setlength{\parskip}{0.5em}
+
+\usepackage{pgfplots}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\begin{document}
+	\lstset{ %
+		language=C,                 % выбор языка для подсветки (здесь это С)
+		basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+		numbers=left,               % где поставить нумерацию строк (слева\справа)
+		numberstyle=\tiny,           % размер шрифта для номеров строк
+		stepnumber=1,                   % размер шага между двумя номерами строк
+		numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+		backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+		showspaces=false,            % показывать или нет пробелы специальными отступами
+		showstringspaces=false,      % показывать или нет пробелы в строках
+		showtabs=false,             % показывать или нет табуляцию в строках
+		frame=single,              % рисовать рамку вокруг кода
+		tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+		captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+		breaklines=true,           % автоматически переносить строки (да\нет)
+		breakatwhitespace=false, % переносить строки только если есть пробел
+		escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+	}
+	
+	% Титульный лист
+	\begin{figure}[h!]
+		\begin{center}
+			{\includegraphics[scale = 0.4]{titul.jpg}}
+			\label{titul}
+		\end{center}
+	\end{figure}
+	
+	\vspace*{15mm} 
+	
+	\huge
+	\begin{center}
+		Дисциплина: <<Функциональное и логическое программирование>>
+	\end{center}
+	\vspace*{15mm} 	
+	
+	\begin{center}
+		Лабораторная работа №16
+	\end{center}
+	
+	\vspace*{15mm} 	
+	
+	\large
+	\begin{flushright}
+		Студент: Левушкин И. К. \\
+		Группа: ИУ7-62Б \\
+		Преподаватели: Толпинская Н. Б., \\ Строганов Ю. В. \\
+	\end{flushright}
+	
+	\vspace*{30mm}
+	\begin{center}
+		Москва, 2020 г.  
+	\end{center}
+	\thispagestyle{empty}
+	
+	
+	\newpage
+	
+	\section*{Цель работы}
+	
+	Изучить использование правил в программе: структуру, особенности оформления, а также, способ и принципы выполнения таких программ на Prolog.
+	
+	\section*{Задачи работы}
+	
+	Приобрести навыки эффективного декларативного описания предметной области с использованием фактов и правил.
+	Изучить порядок использования фактов и правил в программе на Prolog, принципы и особенности сопоставления и отождествления термов, на основе механизма унификации. Способ формирования и изменения резольвенты. Порядок формирования ответа.
+	
+	\section*{Задание}
+	
+	Ответить на вопросы:
+	\begin{itemize}
+		\item В каком случае система запускает алгоритм унификации? (Как эту необходимость на формальном уровне распознает система?)
+		\item Каковы назначение и результат использования алгоритма унификации? 
+		\item Какое первое состояние резольвенты?
+		\item Как меняется резольвента?
+		\item В каких пределах программы уникальны переменные? 
+		\item Как применяется подстановка, полученная с помощью алгоритма унификации?
+		\item В каких случаях запускается механизм отката?
+	\end{itemize}
+	
+	{\bf Создать базу знаний: «ПРЕДКИ»}, позволяющую {\bf наиболее эффективным} способом (за меньшее количество шагов, что обеспечивается меньшим количеством предложений БЗ - правил), используя разные варианты (примеры) {\bf одного вопроса}, определить (указать: какой вопрос для какого варианта):
+	\begin{enumerate}
+		\item по имени субъекта определить всех его бабушек (предки 2-го колена),
+		\item по имени субъекта определить всех его дедушек (предки 2-го колена),
+		\item по имени субъекта определить всех его бабушек и дедушек (предки 2-го колена),
+		\item по имени субъекта определить его бабушку по материнской линии (предки 2-го колена),
+		\item по имени субъекта определить его бабушку и дедушку по материнской линии (предки 2-го колена).
+	\end{enumerate}
+
+	Минимизировать количество правил и количество вариантов вопрпосов. Использовать {\bf конъюнктивные правила и простой вопрос}.
+	{\bf Для одного} из вариантов {\bf ВОПРОСА} и конкретной БЗ {\bf составить таблицу}, отражающую конкретный порядок работы системы, с объяснениями: 
+	очередная проблема на каждом шаге и метод ее решения; 
+	каково новое текущее состояние резольвенты, как получено;
+	какие дальнейшие действия? (Запускается ли алгоритм унификации? Каких термов? Почему этих?) ;
+	вывод по результатам очередного шага и дальнейшие действия.
+	Т.к. резольвента хранится в виде стека, то состояние резольвенты требуется отображать в столбик: \underline{вершина – сверху!} Новый шаг надо начинать с нового состояния резольвенты!
+	
+	\begin{center}
+		\begin{longtable}[h!]{|p{0.05\linewidth}|p{0.25\linewidth}|p{ 0.3\linewidth}|p{ 0.3\linewidth}|}
+			\hline
+			{№ шага} & {Состояние 
+				
+				резольвенты, и 
+				
+				вывод: дальнейшие 
+				
+				действия (почему?)} & {Для каких термов 
+				
+				запускается алгоритм 
+				
+				унификации: Т1=Т2 и 
+				
+				каков {\bf результат} (и 
+				
+				подстановка)} & {Дальнейшие действия: 
+				
+				прямой ход или откат 
+				
+				(почему и к чему 
+				
+				приводит?)}\\
+			\hline
+			{1...} & {...} & {...} & {Комментарий, вывод...}\\
+			\hline
+			{2} & {...} & {...} & {...}\\
+			\hline
+			\label{m1}
+		\end{longtable}
+	\end{center}
+
+	\newpage
+	
+	\section*{Реализация программы}
+	
+	\begin{minted}{prolog}
+predicates
+	first_ancestors(symbol Child, symbol Father, symbol Mother)
+	
+	second_ancestors(symbol Child, symbol Grandfather_f, 
+	symbol Grandmother_f, symbol Grandfather_m, symbol Grandmother_m)
+clauses
+	first_ancestors(ilya, kirill, tatiana).
+	first_ancestors(kirill, sergei, nadya).
+	first_ancestors(tatiana, tolya, luba).
+	
+	first_ancestors(vasilisa, yura, sveta).
+	first_ancestors(yura, andrei, zina).
+	first_ancestors(sveta, kolya, gerda).
+
+	second_ancestors(Child, GF_f, GM_f, GF_m, GM_m) :- 
+	first_ancestors(Child, Father, Mother),
+	first_ancestors(Father, GF_f, GM_f), 
+	first_ancestors(Mother, GF_m, GM_m).
+	\end{minted}
+	
+	\section*{Тесты}
+	
+	\subsection*{1.	По имени субъекта определить всех его бабушек (предки 2-го колена).}
+	
+	\begin{minted}{prolog}
+goal
+	second_ancestors(ilya, _, Grandmother_f, _, Grandmother_m).
+%Вывод:
+	Grandmother_f=nadya, Grandmother_m=luba
+	1 Solution
+	\end{minted}
+	
+	\subsection*{2. По имени субъекта определить всех его дедушек (предки 2-го колена).}
+	
+	\begin{minted}{prolog}
+goal
+	second_ancestors(ilya, Grandfather_f, _, Grandfather_m, _).
+%Вывод:
+	Grandfather_f=sergei, Grandfather_m=tolya
+	1 Solution
+	\end{minted}
+	
+	\subsection*{3. По имени субъекта определить всех его бабушек и дедушек (предки 2-го колена).}
+	
+	\begin{minted}{prolog}
+goal
+	second_ancestors(ilya, Grandfather_f, Grandmother_f, 
+	
+	Grandfather_m, Grandmother_m).
+%Вывод:
+	Grandfather_f=sergei, Grandmother_f=nadya, 
+	Grandfather_m=tolya, Grandmother_m=luba
+	1 Solution
+	\end{minted}
+	
+	\subsection*{4. По имени субъекта определить его бабушку по материнской линии (предки 2-го колена).}
+	
+	\begin{minted}{prolog}
+goal
+	second_ancestors(ilya, _, _, _, Grandmother_m).
+%Вывод:
+	Grandmother_m=luba
+	1 Solution
+	\end{minted}
+	
+	\subsection*{5. По имени субъекта определить его бабушку и дедушку по материнской линии (предки 2-го колена).}
+	
+	\begin{minted}{prolog}
+goal
+	second_ancestors(ilya, _, _, Grandfather_m, Grandmother_m).
+%Вывод:
+	Grandfather_m=tolya, Grandmother_m=luba
+	1 Solution
+	\end{minted}
+	
+	\textit{Порядок работы системы:}
+	
+	\begin{center}
+		\begin{longtable}[h!]{|p{0.05\linewidth}|p{0.25\linewidth}|p{ 0.3\linewidth}|p{ 0.3\linewidth}|}
+			\hline
+			{№ шага} & {Состояние 
+				
+				резольвенты, и 
+				
+				вывод: дальнейшие 
+				
+				действия (почему?)} & {Для каких термов 
+				
+				запускается алгоритм 
+				
+				унификации: Т1=Т2 и 
+				
+				каков {\bf результат} (и 
+				
+				подстановка)} & {Дальнейшие действия: 
+				
+				прямой ход или откат 
+				
+				(почему и к чему 
+				
+				приводит?)}\\
+			\hline
+			{1} & {second\_ancestors
+				
+				(ilya, \_, \_, Grandfather\_m, Grandmother\_m)} & {T1 = second\_ancestors
+				
+				(ilya, \_, \_, Grandfather\_m, Grandmother\_m);
+			
+		T2 = first\_ancestors
+		
+		(ilya, kirill, tatiana).
+	
+Неудача (функторы second\_ancestors и first\_ancestors не равны)} & {Прямой ход к следующему предложению.
+
+Аналогичная ситуация в следующих 5 предложениях. Переход к следующему предложению.}\\
+			\hline
+			{7} & {second\_ancestors
+				
+				(ilya, \_, \_, Grandfather\_m, Grandmother\_m)} & {T1 = second\_ancestors
+				
+				(ilya, \_, \_, Grandfather\_m, Grandmother\_m);
+			
+		T2 = second\_ancestors
+		
+		(Child, GF\_f, GM\_f, GF\_m, GM\_m).
+	
+Успех. Подстановка ilya = Child, Grandfather\_m = GF\_m, Grandmother\_m = GM\_m.} & {Прямой ход: first\_ancestors(ilya, Father, Mother). Поиск с начала предложений.}\\
+			\hline
+			{8} & {first\_ancestors
+				
+				(ilya, Father, Mother),
+			
+		first\_ancestors
+	
+(Father, \_, \_),
+
+first\_ancestors
+
+(Mother, GF\_m, GM\_m).} & {T1 = first\_ancestors
+
+(ilya, Father, Mother),
+
+T2 = first\_ancestors
+
+(ilya, kirill, tatiana).
+
+Успех. Подстановка ilya=ilya, Father=kirill, Mother=tatiana.} & {Прямой ход к first\_ancestors
+
+(kirill, \_, \_). 
+
+Прямой ход к
+
+first\_ancestors
+
+(tatiana, GF\_m, GM\_m). Поиск с начала предложений.}\\
+			\hline
+			{9} & {first\_ancestors
+			
+		(tatiana, GF\_m, GM\_m).} & {T1 = first\_ancestors
+		
+		(tatiana, GF\_m, GM\_m),
+	
+T2 = first\_ancestors
+
+(ilya, kirill, tatiana). Неудача, tatiana != ilya.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{10} & {first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m),
+				
+				T2 = first\_ancestors
+				
+				(kirill, sergei, nadya). Неудача, tatiana != kirill.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{11} & {first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m),
+				
+				T2 = first\_ancestors
+				
+				(tatiana, tolya, luba). Успех. Подстановка tatiana = tatiana, 
+				GF\_m = tolya, GM\_m = luba.} & {Вывод: Grandfather\_m = tolya, Grandmother\_m = luba.
+			
+		Прямой ход к следующему предложению, реконкретизация GF\_m, GM\_m.}\\
+			\hline
+			{12} & {first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m),
+				
+				T2 = first\_ancestors
+				
+				(vasilisa, yura, sveta). Неудача, tatiana != vasilisa.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{13} & {first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m),
+				
+				T2 = first\_ancestors
+				
+				(yura, andrei, zina). Неудача, tatiana != yura.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{14} & {first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m),
+				
+				T2 = first\_ancestors
+				
+				(sveta, kolya, gerda). Неудача, tatiana != sveta.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{15} & {first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(tatiana, GF\_m, GM\_m),
+				
+				T2 = second\_ancestors
+				
+				(Child, GF\_f, GM\_f, GF\_m, GM\_m). Неудача (функторы first\_ancestors и second\_ancestors не равны).} & {Откат, переход к предыдущему состоянию резольвенты (шаг 8), реконкретизация Father, Mother.}\\
+			\hline
+			{16} & {first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				first\_ancestors
+				
+				(Father, \_, \_),
+				
+				first\_ancestors
+				
+				(Mother, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(ilya, Father, Mother),
+			
+		T2 = first\_ancestors
+	
+(kirill, sergei, nadya). Неудача, ilya != kirill.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{17} & {first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				first\_ancestors
+				
+				(Father, \_, \_),
+				
+				first\_ancestors
+				
+				(Mother, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				T2 = first\_ancestors
+				
+				(tatiana, tolya, luba). Неудача, ilya != tatiana.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{18} & {first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				first\_ancestors
+				
+				(Father, \_, \_),
+				
+				first\_ancestors
+				
+				(Mother, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				T2 = first\_ancestors
+				
+				(vasilisa, yura, sveta). Неудача, ilya != vasilisa.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{19} & {first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				first\_ancestors
+				
+				(Father, \_, \_),
+				
+				first\_ancestors
+				
+				(Mother, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				T2 = first\_ancestors
+				
+				(yura, andrei, zina). Неудача, ilya != yura.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{20} & {first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				first\_ancestors
+				
+				(Father, \_, \_),
+				
+				first\_ancestors
+				
+				(Mother, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				T2 = first\_ancestors
+				
+				(sveta, kolya, gerda). Неудача, ilya != sveta.} & {Прямой ход к следующему предложению.}\\
+			\hline
+			{21} & {first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				first\_ancestors
+				
+				(Father, \_, \_),
+				
+				first\_ancestors
+				
+				(Mother, GF\_m, GM\_m).} & {T1 = first\_ancestors
+				
+				(ilya, Father, Mother),
+				
+				T2 = second\_ancestors
+				
+				(Child, GF\_f, GM\_f, GF\_m, GM\_m). Неудача (функторы first\_ancestors и second\_ancestors не равны).} & {Откат, переход к предыдущему состоянию резольвенты (шаг 7). Реконкретизация Grandfather\_m, Grandmother\_m.}\\
+			\hline
+			{22} & {second\_ancestors
+				
+				(ilya, \_, \_, Grandfather\_m, Grandmother\_m);
+			
+		конец clauses;
+	
+опустошение 
+
+резольвенты;
+
+завершение
+
+работы.} & {} & {}\\
+			\hline
+			\label{m2}
+		\end{longtable}
+	\end{center}
+	
+	\section*{Ответы на вопросы}
+	
+	\subsection*{В каком случае система запускает алгоритм унификации? (Как эту необходимость на формальном уровне распознает система?)}
+	
+	Процесс унификации запускается, если есть цель, которую необходимо доказать (формально: если резольвента не пуста).
+	
+	\subsection*{Каковы назначение и результат использования алгоритма унификации}
+	
+	Назначение алгоритма унификации заключается в попарном сопоставлении термов и попытке построить для них общий пример. 
+	
+	Результатом использования алгоритма унификации может быть успех или тупиковая ситуация (неудача).
+	
+	\subsection*{Какое первое состояние резольвенты?}
+	
+	Если задан простой вопрос, то сначала он попадает в резольвенту.
+	
+	\subsection*{Как меняется резольвента?}
+	
+	Изменение резольвенты происходит в 2 этапа:
+	
+	\begin{enumerate}
+		\item из стека выбирается подцель и для нее выполняется редукция, т.е. замена подцели на тело найденного правила;
+		\item к полученной конъюнкции целей применяется подстановка (наибольший общий унификатор выбранной цели и заголовка сопоставленного с этой целью правила).
+	\end{enumerate}
+
+	\subsection*{В каких пределах программы уникальны переменные? }
+	
+	Переменные уникальны в пределах предложения.
+	
+	 Исключение – анонимные переменные – каждая такая переменная является отдельной сущностью и применяется, когда ее значение неважно для данного предложения.
+	
+	\subsection*{Как применяется подстановка, полученная с помощью алгоритма унификации?}
+	
+	Применение подстановки ${x_1=t_1, …, x_n=t_n}$ заключается в замене каждого вхождения переменной $x_i$ на соответствующий терм $t_i$.
+	
+	\subsection*{В каких случаях запускается механизм отката?}
+	
+	Механизм отката запускается, если возникла тупиковая ситуация (достигнут конец БЗ) либо резольвента пуста. В таких случаях происходит откат к предыдущему состоянию резольвенты.
+	
+	\section*{Исправление ошибок 14-ой лабораторной работы.}
+	
+	\subsection*{Порядок работы алгоритма унификации  2-термов??? А это что???}
+	
+	Имелось в виду: \textit{Порядок работы алгоритма унификации вопроса и подходящего заголовка правила при изменении порядока следования в Базе Знаний процедур и знаний в них.}
+	
+	\subsection*{Исправить следующую запись в таблице порядка работы алгоритма унификации вопроса и подходящего заголовка правила:}
+	
+	\textit{get\_info\_by\_model\_color(bugatti, gold, Sername, Phone, Bank)=
+\linebreak
+	get\_info\_by\_mode\_color(Model, Color, Sername, Phone, Bank):- {\color{red} auto(Sername,
+	Model, Color, \_, \_), \linebreak bank\_list(Sername,Bank, \_, \_),phone\_list(Sername,Phone, \_).}}
+	
+	Ниже приведена исправленная таблица:
+	
+	\begin{center}
+		\begin{longtable}[h!]{|p{0.025\linewidth}|p{0.2\linewidth}|p{ 0.3\linewidth}|p{ 0.025\linewidth}|p{ 0.3\linewidth}|}
+			\hline
+			{\bf  № шага} & {\bf Результирую-
+				
+				щая ячейка} & {\bf Рабочее поле} & {\bf П. алг.} & {\bf Стек}\\
+			\hline
+			{0} & {} & {} & {1} & {get\_info\_by\_
+				model\_color(bugatti, gold, Sername, Phone, Bank)=get\_info\_by\_
+				mode\_color(Model, Color, Sername, Phone, Bank).}\\
+			\hline
+			{1} & {} & {get\_info\_by\_
+				model\_color(bugatti, gold, Sername, Phone, Bank)=get\_info\_by\_
+				mode\_color(Model, Color, Sername, Phone, Bank).} & {e} & {auto(Sername, bugatti, gold, \_, \_) = auto(samkov, bugatti, gold, \_, \_),
+				
+				auto(Sername, bugatti, gold, \_, \_) = auto(ryazanova, bugatti, gold, \_, \_),
+				
+				bank\_list(Sername, Bank, \_, \_),
+				
+				phone\_list(Sername, Phone, \_, \_).}\\
+			\hline
+			{2} & {Sername = samkov,
+				
+				Sername = ryazanova} & {auto(Sername, bugatti, gold, \_, \_) = auto(samkov, bugatti, gold, \_, \_),
+				
+				auto(Sername, bugatti, gold, \_, \_) = auto(ryazanova, bugatti, gold, \_, \_).} & {e} & {bank\_list(samkov, Bank, \_, \_) = bank\_list(samkov, sberbank, \_, \_),
+				
+				bank\_list(ryazanova, Bank, \_, \_) = bank\_list(ryazanova, tinkoff, \_, \_),
+				
+				bank\_list(ryazanova, Bank, \_, \_) = bank\_list(ryazanova, raiffeisen, \_, \_),
+				
+				phone\_list(samkov, Phone, \_, \_),
+				
+				phone\_list(ryazanova, Phone, \_, \_).}\\
+			\hline
+			{3} & {Sername = samkov,
+				
+				Bank = sberbank,
+				
+				Sername = ryazanova,
+				
+				Bank = tinkoff,
+				
+				Bank = raiffeisen.} & {bank\_list(samkov, Bank, \_, \_) = bank\_list(samkov, sberbank, \_, \_),
+				
+				bank\_list(ryazanova, Bank, \_, \_) = bank\_list(ryazanova, tinkoff, \_, \_),
+				
+				bank\_list(ryazanova, Bank, \_, \_) = bank\_list(ryazanova, raiffeisen, \_, \_).} & {e} & {phone\_list(samkov, Phone, \_, \_) = phone\_list(samkov, <<89899999>>, \_, \_),
+				
+				phone\_list(ryazanova, Phone, \_, \_) = phone\_list(ryazanova, <<8911911911>>, \_, \_).}\\
+			\hline
+			{4} & {Sername = samkov,
+				
+				Bank = sberbank,
+				
+				Sername = ryazanova,
+				
+				Bank = tinkoff,
+				
+				Bank = raiffeisen.} & {phone\_list(samkov, Phone, \_, \_) = phone\_list(samkov, <<89899999>>, \_, \_),
+				
+				phone\_list(ryazanova, Phone, \_, \_) = phone\_list(ryazanova, <<8911911911>>, \_, \_).} & {e} & {}\\
+			\hline
+			{Вы-
+				
+				вод:} & {\bf подстановка} & {Т. к. стек пуст - {\bf успех} и в рез. ячейнке подстановка} & {} & {}\\
+			\hline
+			\label{m4}
+		\end{longtable}
+	\end{center}
+
+	\subsection*{Работа алгоритма унификации заключается в попарном сопоставлении термов и попытке построить для них общий пример    ЗАЧЕМ???}
+	
+	Унификация двух термов является основным шагом доказательства, назначение которого – подобрать нужное в данный момент правило.
+	
+	
+	
+\end{document}
